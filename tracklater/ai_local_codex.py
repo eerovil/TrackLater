@@ -46,7 +46,7 @@ GUIDEBOOK_PATH = os.path.join(REPO_ROOT, 'ENTRY_GUIDEBOOK.md')
 GUIDEBOOK_LOCAL_PATH = os.path.join(REPO_ROOT, 'ENTRY_GUIDEBOOK.local.md')
 DEFAULT_MODEL = 'gpt-5.6-sol'
 DEFAULT_TIMEOUT = 420  # per single-day Codex call
-DEFAULT_EFFORT = 'low'
+DEFAULT_EFFORT = 'none'
 
 OUTPUT_SCHEMA = {
     'type': 'object',
@@ -568,6 +568,16 @@ def _local_day_utc_bounds(day: str) -> (datetime, datetime):
     return _to_utc(local_start), _to_utc(local_end)
 
 
+def _local_day_has_billing_entries(day: str) -> bool:
+    """Whether the billing module already holds an entry on this LOCAL day."""
+    d_start, d_end = _local_day_utc_bounds(day)
+    return Entry.query.filter(
+        Entry.module == MODULE_NAME,
+        Entry.start_time >= d_start,
+        Entry.start_time < d_end,
+    ).first() is not None
+
+
 def validate_single_local_day_range(
     start_date: datetime, end_date: datetime,
 ) -> str:
@@ -595,6 +605,7 @@ def stream_populate_local_entries_ai(
     end_date: datetime,
     replace_existing: bool = True,
     only_day: Optional[str] = None,
+    skip_filled_days: bool = False,
 ):
     """Generator variant of populate_local_entries_ai for streaming.
 
@@ -603,8 +614,11 @@ def stream_populate_local_entries_ai(
     the days already finished and leaves untouched days alone. Each yielded dict:
         {'type': 'progress', 'day', 'done', 'total', 'count'}
         {'type': 'day_error', 'day', 'error'}
-        {'type': 'done', 'count', 'errors'}
+        {'type': 'done', 'count', 'errors', 'skipped'}
         {'type': 'error', 'error'}   (fatal, before any day ran)
+
+    With ``skip_filled_days`` a day that already has billing entries is left
+    alone (listed in ``skipped``) instead of being replaced.
     """
     if MODULE_NAME not in settings.ENABLED_MODULES:
         yield {'type': 'error', 'error': 'local module is not enabled'}
@@ -628,6 +642,10 @@ def stream_populate_local_entries_ai(
         return
 
     days = sorted(digests)
+    skipped: List[str] = []
+    if skip_filled_days:
+        skipped = [d for d in days if _local_day_has_billing_entries(d)]
+        days = [d for d in days if d not in skipped]
     total = len(days)
     prior_titles: List[str] = []
     errors: List[str] = []
@@ -668,7 +686,8 @@ def stream_populate_local_entries_ai(
                 prior_titles.append(e['title'])
         yield {'type': 'progress', 'day': day, 'done': idx + 1,
                'total': total, 'count': len(day_entries)}
-    yield {'type': 'done', 'count': total_count, 'errors': errors}
+    yield {'type': 'done', 'count': total_count, 'errors': errors,
+           'skipped': skipped}
 
 
 # --------------------------------------------------------------------------- #

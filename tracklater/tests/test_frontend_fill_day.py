@@ -31,7 +31,12 @@ assert.deepStrictEqual(
   JSON.parse(JSON.stringify(sandbox.home.methods.populatePayload(
     bounds.from, bounds.to, true,
   ))),
-  {from: bounds.from, to: bounds.to, replace_existing: true, single_day: true},
+  {from: bounds.from, to: bounds.to, replace_existing: true, single_day: true,
+   skip_filled_days: false},
+);
+assert.strictEqual(
+  sandbox.home.methods.populatePayload(bounds.from, bounds.to, false).skip_filled_days,
+  true,
 );
 assert.strictEqual(
   sandbox.daytimeline.computed.populateLoading.call({

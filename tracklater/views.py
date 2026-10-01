@@ -251,6 +251,7 @@ def populatelocalstream() -> Any:
     from_date = timestamp_parser(data.get('from'))
     to_date = timestamp_parser(data.get('to'))
     replace_existing = data.get('replace_existing', True)
+    skip_filled_days = data.get('skip_filled_days') is True
     if not from_date or not to_date:
         return json.dumps({"error": "from and to timestamps (ms) are required"}), 400
 
@@ -271,7 +272,7 @@ def populatelocalstream() -> Any:
         try:
             for event in stream_populate_local_entries_ai(
                 from_date, to_date, replace_existing=replace_existing,
-                only_day=only_day,
+                only_day=only_day, skip_filled_days=skip_filled_days,
             ):
                 yield json.dumps(event, default=json_serial) + "\n"
         except GeneratorExit:

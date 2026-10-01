@@ -130,6 +130,35 @@ def test_empty_single_day_result_preserves_existing_entries(monkeypatch):
     assert events[-1]['type'] == 'done'
 
 
+def test_week_stream_skips_days_that_already_have_entries(monkeypatch):
+    result = json.dumps([{
+        'date': '2026-07-15',
+        'start': '09:00',
+        'end': '10:00',
+        'project': 'group1:Development',
+        'title': 'Work',
+    }])
+    _configure_stream(monkeypatch, result)
+    monkeypatch.setattr(
+        codex, '_local_day_has_billing_entries', lambda day: day != '2026-07-15',
+    )
+    prompted = []
+    monkeypatch.setattr(
+        codex, 'build_day_prompt', lambda day, *_: prompted.append(day) or day,
+    )
+    monkeypatch.setattr(codex, 'persist_local_entries', lambda *_a, **_k: None)
+    start, _ = codex._local_day_utc_bounds('2026-07-15')
+    _, end = codex._local_day_utc_bounds('2026-07-17')
+
+    events = list(codex.stream_populate_local_entries_ai(
+        start, end, skip_filled_days=True,
+    ))
+
+    assert prompted == ['2026-07-15']
+    assert events[0]['total'] == 1
+    assert events[-1]['skipped'] == ['2026-07-16', '2026-07-17']
+
+
 @pytest.fixture()
 def app_db_with_signal(monkeypatch, db):
     """A day whose per-group activity is holey but whose work is continuous."""
