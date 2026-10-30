@@ -4,10 +4,9 @@ import tempfile
 # Point every create_app() at a throwaway database BEFORE any test module is
 # imported (test_app/test_ai_local call create_app() at import time). Without
 # this, the engine binds to the real tracklater/database.db and tests mutate it.
-os.environ.setdefault(
-    'TRACKLATER_DB_URI',
-    'sqlite:///{}'.format(os.path.join(tempfile.gettempdir(), 'tracklater_pytest.db')),
-)
+# One file per run: two checkouts testing at once must not wipe each other's rows.
+_TEST_DB = os.path.join(tempfile.gettempdir(), 'tracklater_pytest_{}.db'.format(os.getpid()))
+os.environ.setdefault('TRACKLATER_DB_URI', 'sqlite:///{}'.format(_TEST_DB))
 
 import pytest
 from tracklater import settings
@@ -38,3 +37,8 @@ def mock_settings(monkeypatch):
 def db():
     from tracklater.database import db
     return db
+
+
+def pytest_sessionfinish(session, exitstatus):
+    if os.path.exists(_TEST_DB):
+        os.remove(_TEST_DB)
