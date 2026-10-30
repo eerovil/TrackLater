@@ -7,7 +7,7 @@ Nothing is billed and no transcript text leaves the machine.
 
 ```mermaid
 flowchart TD
-    A[Fetch claude row for a date range] --> B[List transcripts in ~/.claude/projects]
+    A[Fetch claude row for a date range] --> B[List transcripts in ~/.claude*/projects]
     B --> C{Written to since the range start?}
     C -- No --> X[Skip file]
     C -- Yes --> D[Read user and Claude messages with times]
@@ -37,7 +37,7 @@ flowchart TD
 - **rose**: left out
 
 ## Boxes
-- **List transcripts in ~/.claude/projects**: `Provider.get_chats` in `tracklater/timemodules/claude.py`; the folder is `CLAUDE.global.DIR`.
+- **List transcripts in ~/.claude*/projects**: `Provider.get_chats` in `tracklater/timemodules/claude.py`; the folders come from `CLAUDE.global.DIR` (a folder or list, globs allowed); the default `~/.claude*/projects` also reads the second account AgentDeck runs from `~/.claude2`.
 - **Written to since the range start?**: a file last changed before the range can hold nothing in it, so it is not opened.
 - **Read user and Claude messages with times**: `read_chat`; skips bookkeeping lines and subagent (sidechain) messages.
 - **Pick hint: first real prompt**: `chat_hint`; an AgentDeck brief shortens to "Work for owner/repo#n", and other messages AgentDeck sends by itself (wake-ons, review events) are passed over.
