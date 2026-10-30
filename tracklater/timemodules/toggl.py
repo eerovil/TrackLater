@@ -128,7 +128,7 @@ class Parser(EntryMixin, AddEntryMixin, UpdateEntryMixin, DeleteEntryMixin, Proj
             row.toggl_id for row in Entry.query.filter(
                 Entry.module == MODULE_NAME,
                 Entry.is_draft == True,  # noqa: E712
-                Entry.toggl_id.isnot(None),
+                Entry.toggl_id != None,  # noqa: E711
             ).all()
         }
         time_entries = []
@@ -143,7 +143,7 @@ class Parser(EntryMixin, AddEntryMixin, UpdateEntryMixin, DeleteEntryMixin, Proj
                 start_time=parse_time(entry['start']),
                 end_time=parse_time(entry['stop']) if entry.get('stop') else None,
                 title=entry.get('description', ''),
-                project=numeric_to_synthetic.get(_str(entry.get('pid') or entry.get('project_id'))),
+                project=numeric_to_synthetic.get(_str(entry.get('pid') or entry.get('project_id')) or ''),
             ))
         return time_entries
 
@@ -284,7 +284,7 @@ class Provider(AbstractProvider):
         except (TypeError, ValueError):
             return 60
 
-    def request(self, endpoint: str, **kwargs) -> Union[List[dict], dict]:
+    def request(self, endpoint: str, **kwargs) -> Optional[Union[List[dict], dict]]:
         url = 'https://api.track.toggl.com/api/v9/{}'.format(endpoint)
         kwargs['headers'] = kwargs.get('headers', {
             "Content-Type": "application/json"
@@ -300,12 +300,12 @@ class Provider(AbstractProvider):
         if response.status_code == 429:
             raise QuotaExceeded(self._parse_reset_seconds(response))
         if not response.content:
-            return
+            return None
         try:
             ret = response.json()
             if response.status_code >= 400:
                 if method == "delete" and "not found" in str(ret).lower():
-                    return  # This is ok
+                    return None  # This is ok
                 # Redact auth so the API token never lands in the logs.
                 safe = {k: ('<redacted>' if k == 'auth' else v) for k, v in kwargs.items()}
                 logger.exception("%s: %s, - %s", url, safe, response.content)

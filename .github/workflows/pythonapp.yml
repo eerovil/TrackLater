@@ -8,17 +8,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/cache@v1
+    - uses: actions/checkout@v7
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v7
       with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirement*.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
+        python-version: '3.12'
+        cache: pip
+        cache-dependency-path: requirement*.txt
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -35,6 +31,3 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --cov=. --cov-report term
-        codecov
-      env:
-        CODECOV_TOKEN: 9a7b0691-eff9-49e2-89d8-15c51a8df636

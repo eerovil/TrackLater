@@ -51,12 +51,12 @@ def _entry_for(entry_id: str) -> Optional[Entry]:
     ).first()
 
 
-def _rekey_to_toggl_id(entry: Entry, toggl_id: str) -> None:
+def _rekey_to_toggl_id(entry: Entry, toggl_id: Optional[str]) -> None:
     """Best-effort: re-key a synced entry's row to its Toggl id so a later fetch
     reconciles without a transient duplicate. The id is part of the primary key,
     so replace the row. Safe to skip — the entry is already marked synced and a
     later fetch self-heals — so failures here must not resurrect the draft."""
-    if entry.id == toggl_id:
+    if not toggl_id or entry.id == toggl_id:
         return
     try:
         replacement = Entry(

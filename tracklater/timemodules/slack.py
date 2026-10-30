@@ -104,6 +104,9 @@ class AsyncProvider(AbstractProvider):
             sleep(1)
             return await self.sc.api_call(*args, **kwargs)
 
+    async def test_api_call(self, *args, **kwargs):
+        return Provider.test_api_call(self, *args, **kwargs)
+
 
 class Provider(AbstractProvider):
     def __init__(self, slack_token):

@@ -3,14 +3,14 @@ from tracklater.utils import _str
 from datetime import datetime, timedelta, date
 import json
 import pytz
-from typing import Dict, Any
+from typing import Dict, Any, List, Optional
 from time import sleep
 
 from tracklater.database import db
 from tracklater.main import Parser
 from tracklater import settings
 from tracklater.models import Entry, Issue, Project, ApiCall  # noqa
-from tracklater.timemodules.interfaces import AddEntryMixin, UpdateEntryMixin
+from tracklater.timemodules.interfaces import AddEntryMixin, UpdateEntryMixin, ProjectMixin
 from tracklater.ai_local import populate_local_entries
 from tracklater.billing import BILLING_MODULE
 
@@ -66,7 +66,7 @@ def getsettings() -> Any:
 @bp.route('/fetchdata', methods=['GET'])
 def fetchdata() -> Any:
     if request.method == 'GET':
-        keys = request.values.getlist('keys[]')
+        keys: Optional[List[str]] = request.values.getlist('keys[]')
         parse = request.values.get('parse', '1')
         now = datetime.utcnow()
         if 'from' in request.values:
@@ -92,10 +92,11 @@ def fetchdata() -> Any:
         for key in settings.ENABLED_MODULES:
             if not keys or key in keys:
                 data[key] = {}
-                if key == BILLING_MODULE and key in parser.modules:
+                billing_parser = parser.modules.get(key)
+                if key == BILLING_MODULE and isinstance(billing_parser, ProjectMixin):
                     # Synthetic group:name projects need no API call; ensure they
                     # exist in the DB so the project dropdown works without a parse.
-                    for project in parser.modules[key].get_projects():
+                    for project in billing_parser.get_projects():
                         project.module = key
                         db.session.merge(project)
                     db.session.commit()
@@ -267,7 +268,6 @@ def populatelocalstream() -> Any:
         except ValueError as e:
             return json.dumps({"error": str(e)}), 400
 
-    @stream_with_context
     def generate():
         try:
             for event in stream_populate_local_entries_ai(
@@ -284,7 +284,7 @@ def populatelocalstream() -> Any:
             logger.exception("populatelocalstream failed")
             yield json.dumps({"type": "error", "error": str(e)}) + "\n"
 
-    return Response(generate(), mimetype='application/x-ndjson')
+    return Response(stream_with_context(generate()), mimetype='application/x-ndjson')
 
 
 @bp.route('/suggestions', methods=['GET'])
