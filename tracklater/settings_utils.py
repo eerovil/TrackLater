@@ -45,7 +45,7 @@ def helper(module, key, group='global', default=None):
         _tmp_dict = getattr(settings_wrapper, module)['global']
         if key in _tmp_dict:
             return _tmp_dict[key]
-    if default:
+    if default is not None:
         return default
 
     raise KeyError('No setting "{}" for module {} found'.format(key, module))

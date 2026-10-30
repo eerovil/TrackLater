@@ -1,7 +1,7 @@
 
 TESTING = True
 
-ENABLED_MODULES = ['jira', 'gitmodule', 'slack', 'taiga', 'toggl', 'thyme']
+ENABLED_MODULES = ['jira', 'gitmodule', 'slack', 'taiga', 'kimai', 'thyme']
 
 from datetime import datetime, timedelta
 
@@ -13,6 +13,9 @@ OVERRIDE_END = datetime.fromtimestamp(
 ) + timedelta(days=4)
 
 UI_SETTINGS = {
+    'kimai': {
+        'global': '#FF7043'
+    },
     'toggl': {
         'global': '#E01A22'
     },
@@ -67,6 +70,22 @@ TAIGA = {
     }
 }
 
+LOCAL = {
+    'group1': {
+        'NAME': 'First Group',
+        'PROJECTS': {
+            'Development': 'default',
+            'Bug fixing': 'bug',
+        }
+    },
+    'group2': {
+        'NAME': 'Second Group',
+        'PROJECTS': {
+            'Development': 'default',
+        }
+    },
+}
+
 TOGGL = {
     'global': {
         'API_KEY': 'your-api-key'
@@ -91,3 +110,26 @@ THYME = {  # type: ignore
     'global': {
     }
 }
+
+
+KIMAI = {
+    'global': {
+        'URL': 'https://kimai.example.com',
+        'API_KEY': 'test-token',
+    },
+    'group1': {
+        'NAME': 'First Client',
+        'PROJECTS': {
+            'Development': 'default',
+            'Bug fixing': 'bug',
+        },
+        'ACTIVITY': 7,
+    },
+    'group2': {
+        'NAME': 'Second Client',
+        'PROJECTS': {
+            'Development': 'default',
+        },
+    },
+}
+TIMEZONE = 'Europe/Helsinki'

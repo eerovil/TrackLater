@@ -15,9 +15,16 @@ var toolbar = Vue.component("toolbar", {
             :loading="loading[module]"
             >{{ module }}</v-btn>
             <v-spacer></v-spacer>
+            <v-chip class="mr-2" color="primary" outlined>Σ {{ totalHours }} h</v-chip>
             <v-btn @click="moveWeek(-1)"><</v-btn>
             <v-btn>{{ currentWeek }}</v-btn>
             <v-btn @click="moveWeek(1)">></v-btn>
+            <v-btn
+            v-if="hasBilling"
+            v-on:click="populateLocal()"
+            :loading="loading['populatelocal']"
+            color="primary"
+            >Fill</v-btn>
         </v-row>
         <v-row>
             <v-col xs6>
@@ -25,8 +32,21 @@ var toolbar = Vue.component("toolbar", {
                 v-model="entryTitle"
                 :items="allIssues"
                 @change="exportEntry"
+                @blur="exportEntry()"
                 >
                 </v-combobox>
+                <div v-if="suggestedTitles.length" style="margin-top:-8px;">
+                    <v-chip
+                    v-for="t in suggestedTitles"
+                    :key="t"
+                    x-small
+                    label
+                    class="mr-1 mb-1"
+                    color="primary"
+                    outlined
+                    @click="applyTitle(t)"
+                    >{{ t }}</v-chip>
+                </div>
             </v-col>
             <v-col xs2>
                 <v-select
@@ -39,7 +59,7 @@ var toolbar = Vue.component("toolbar", {
             <v-col xs3>
                 <v-select
                 v-model="selectedProject"
-                :items="projects"
+                :items="projectItems"
                 :item-text="(item) => item.title"
                 :item-value="(item) => item.id"
                 @change="exportEntry"
@@ -95,6 +115,50 @@ var toolbar = Vue.component("toolbar", {
             }
             return this.modules[this.selectedModule].projects;
         },
+        entrySuggestion() {
+            // The Codex-precomputed hint whose time window best overlaps the
+            // selected entry (matched by overlap, since the entry may have moved).
+            const e = this.selectedEntry;
+            const sugs = this.$store.state.suggestions || [];
+            if (!e || !sugs.length) {
+                return null;
+            }
+            const es = new Date(e.start_time).getTime();
+            const ee = new Date(e.end_time || e.start_time).getTime();
+            let best = null, bestOverlap = 0;
+            for (const s of sugs) {
+                const ss = new Date(s.start_time).getTime();
+                const se = new Date(s.end_time || s.start_time).getTime();
+                const overlap = Math.min(ee, se) - Math.max(es, ss);
+                if (overlap > bestOverlap) {
+                    bestOverlap = overlap;
+                    best = s;
+                }
+            }
+            return best; // null if nothing overlaps
+        },
+        projectItems() {
+            // Pin the suggested projects (resolved against the module's project
+            // list; their ids === the "group:Project" hint strings) to the top of
+            // the dropdown, with the full list still below.
+            const all = this.projects || [];
+            const sug = this.entrySuggestion;
+            const ids = (sug && sug.projects) || [];
+            if (!ids.length) {
+                return all;
+            }
+            const top = ids
+                .map((pid) => all.find((p) => p.id === pid))
+                .filter(Boolean);
+            if (!top.length) {
+                return all;
+            }
+            return [{header: 'Suggested'}].concat(top, [{divider: true}], all);
+        },
+        suggestedTitles() {
+            const sug = this.entrySuggestion;
+            return (sug && sug.titles) || [];
+        },
         selectedEntry() {
             let entry = this.$store.state.selectedEntry;
             return entry;
@@ -127,6 +191,21 @@ var toolbar = Vue.component("toolbar", {
                 }
             }
             return ret;
+        },
+        hasBilling() {
+            return this.modules.kimai != null;
+        },
+        totalHours() {
+            // Week total of billed (kimai) hours, matching the per-day counters.
+            const kimai = this.modules.kimai;
+            if (!kimai || !kimai.entries) {
+                return 0;
+            }
+            const secs = kimai.entries
+                .filter((e) => e.end_time)
+                .reduce((acc, e) =>
+                    acc + (new Date(e.end_time).getTime() - new Date(e.start_time).getTime()) / 1000, 0);
+            return Math.round((secs / 3600) * 10) / 10;
         }
     },
     watch: {
@@ -141,6 +220,10 @@ var toolbar = Vue.component("toolbar", {
         }
     },
     methods: {
+        unselectAll(event) {
+            document.querySelectorAll(".v-input").forEach((el) => el.blur());
+            this.$store.commit('setSelectedEntry', null);
+        },
         findIssue(title) {
             return this.$store.getters.findIssue(title)
         },
@@ -152,6 +235,9 @@ var toolbar = Vue.component("toolbar", {
                 this.$emit('fetchModule', module_name)
             }
         },
+        populateLocal() {
+            this.$emit('populateLocal');
+        },
         getProject(issue) {
             // Get a matching project for issue
             for (const project of this.projects) {
@@ -160,6 +246,12 @@ var toolbar = Vue.component("toolbar", {
                 }
             }
             return null
+        },
+        applyTitle(t) {
+            // One-click apply a suggested title without the title-typed project
+            // re-guess (we already have ranked project suggestions for this entry).
+            this.$store.commit('setInput', {title: t, issue: null});
+            this.exportEntry();
         },
         guessProject(title) {
             // Guess project based on the title. return null if no guess

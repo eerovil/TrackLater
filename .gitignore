@@ -119,3 +119,13 @@ tracklater/user_settings.py
 tracklater/*/*.jira-cache
 tracklater/.project
 tracklater/database.db
+
+# Time-entry reconstruction: keep client-specific data out of the public repo
+ENTRY_GUIDEBOOK.local.md
+*.local.md
+TogglTrack_Report_*.csv
+*.csv
+reconstruct_score.py
+hours_accuracy.py
+billable_hours.py
+tracklater/database.db.bak-*

@@ -5,7 +5,8 @@
         "email": "test.person@email.com"
       },
       "message": "commit: Repo 1 Branch 1 First commit message",
-      "authored_datetime": "datetime(1234561)"
+      "authored_datetime": "datetime(1234561)",
+      "changed_files": ["src/main.py", "README.md"]
     },
     {
       "author": {

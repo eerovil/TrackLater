@@ -1,9 +1,16 @@
-from ubuntu:20.04
+FROM node:20-bullseye-slim AS codex_cli
+
+RUN npm install -g @openai/codex
+
+FROM ubuntu:20.04
 
 RUN apt-get update && apt-get -y install \
         software-properties-common \
   && rm -rf /var/lib/apt/lists/*
-RUN add-apt-repository ppa:deadsnakes/ppa
+
+RUN apt-get update && apt-get -y install --reinstall \
+        ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/); \
     echo "arch: $arch"; \
@@ -13,6 +20,7 @@ RUN sed -i 's|http://archive.ubuntu.com|ftp://mirrors.nic.funet.fi|g' /etc/apt/s
 RUN apt-get update && apt-get -y install \
         gettext \
         build-essential \
+        curl \
         git \
         libmemcached-dev \
         libmysqlclient-dev \
@@ -37,6 +45,13 @@ RUN mkdir /code
 WORKDIR /code
 COPY ./requirements.txt /code/
 RUN pip3 install -r requirements.txt
+
+# Node + Codex CLI (used by the AI-backed local populate, engine="codex").
+# Copying the official Node image's /usr/local tree avoids relying on Ubuntu's
+# obsolete Node package or the NodeSource apt repository during this build.
+# Auth comes from the host Codex auth cache mounted in docker-compose.
+COPY --from=codex_cli /usr/local/ /usr/local/
+RUN mkdir -p /root/.codex
 
 RUN mkdir /root/.ssh && ln -s /root/.ssh-mount/id_rsa /root/.ssh/id_rsa && chown -R root:root /root/.ssh
 

@@ -11,4 +11,14 @@ services:
       - "~/.ssh:/root/.ssh-mount"
       - "./:/code"
       - "~/.config/tracklater.json:/root/.config/tracklater.json"
+      # Codex CLI login cache. Run `codex login` on the host first. The mount is
+      # writable so Codex can refresh expiring ChatGPT access tokens.
+      - "~/.codex/auth.json:/root/.codex/auth.json"
       - "~/Documents:/home/eerovilpponen/Documents"
+      # SSH agent forwarding via the Docker Desktop bridge, so the git module's
+      # auto-fetch (GIT.FETCH in tracklater.json) can authenticate over SSH with
+      # the host's agent. For 1Password, the host's SSH_AUTH_SOCK must point at the
+      # 1Password agent (~/.1password/agent.sock) for the bridge to forward it.
+      - "/Users/eerovilpponen/.1password/agent.sock:/ssh-agent"
+    environment:
+      - SSH_AUTH_SOCK=/ssh-agent

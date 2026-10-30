@@ -19,41 +19,44 @@ class Parser(EntryMixin, AbstractParser):
 
     async def async_parse_channel(self, provider, channel, user_id, users, group):
         logger.warning("Getting channel %s for group %s", channel['id'], group)
-        history = await provider.api_call(
-            "conversations.history",
-            data={
-                'channel': channel['id'],
-                'oldest': (self.start_date - datetime(1970, 1, 1)).total_seconds(),
-                'latest': (self.end_date - datetime(1970, 1, 1)).total_seconds()
-            }
-        )
-        # Get either Istant Message recipient or channel name
-        if channel.get('is_im', False) and channel.get('user', ''):
-            channel_info = users.get(channel.get('user', ''), None)
-        else:
-            channel_info = channel.get('name_normalized', channel['id'])
+        try:
+            history = await provider.api_call(
+                "conversations.history",
+                data={
+                    'channel': channel['id'],
+                    'oldest': (self.start_date - datetime(1970, 1, 1)).total_seconds(),
+                    'latest': (self.end_date - datetime(1970, 1, 1)).total_seconds()
+                }
+            )
+            # Get either Istant Message recipient or channel name
+            if channel.get('is_im', False) and channel.get('user', ''):
+                channel_info = users.get(channel.get('user', ''), None)
+            else:
+                channel_info = channel.get('name_normalized', channel['id'])
 
-        for message in history['messages']:
-            if message.get('user', '') == user_id:
-                start_time = datetime.fromtimestamp(float(message['ts']))
-                # "Guess" That the timestamp has an offset equal to settings.TIMEZONE
-                if getattr(settings, 'TIMEZONE', None):
-                    start_time = pytz.timezone("Europe/Helsinki").localize(
-                        start_time
-                    ).astimezone(pytz.utc).replace(tzinfo=None)
-                # Replace @User id with the name
-                for _user_id in users.keys():
-                    if _user_id in message['text']:
-                        message['text'] = message['text'].replace(
-                            _user_id, users[_user_id]
-                        )
-                logger.warning("Found message %s", "{} - {} \n {}".format(group, channel_info, message['text']))
-                self.async_entries.append(Entry(
-                    start_time=start_time,
-                    title='',
-                    text="{} - {} \n {}".format(group, channel_info, message['text']),
-                    group=group
-                ))
+            for message in history['messages']:
+                if message.get('user', '') == user_id:
+                    start_time = datetime.fromtimestamp(float(message['ts']))
+                    # "Guess" That the timestamp has an offset equal to settings.TIMEZONE
+                    # if getattr(settings, 'TIMEZONE', None):
+                    #     start_time = pytz.timezone("Europe/Helsinki").localize(
+                    #         start_time
+                    #     ).astimezone(pytz.utc).replace(tzinfo=None)
+                    # Replace @User id with the name
+                    for _user_id in users.keys():
+                        if _user_id in message['text']:
+                            message['text'] = message['text'].replace(
+                                _user_id, users[_user_id]
+                            )
+                    logger.warning("Found message %s", "{} - {} \n {}".format(group, channel_info, message['text']))
+                    self.async_entries.append(Entry(
+                        start_time=start_time,
+                        title='',
+                        text="{} - {} \n {}".format(group, channel_info, message['text']),
+                        group=group
+                    ))
+        except Exception as e:
+            logger.warning("Error %s", e)
 
     def get_entries(self) -> List[Entry]:
         # start_date, end_date = self.get_offset_dates()
@@ -74,7 +77,7 @@ class Parser(EntryMixin, AbstractParser):
                     user['profile'].get('last_name', 'NULL')
                 )
             im_channels = provider.api_call(
-                "conversations.list", data={'types': 'mpim,im'}
+                "conversations.list", data={'types': 'mpim,im,private_channel', 'limit': 1000}
             )['channels']
             channels = im_channels + [{"id": channel_id} for channel_id in group_data.get('CHANNELS', [])]
             self.async_entries: List[Entry] = []

@@ -1,9 +1,11 @@
 {
     "TESTING": false,
+
     "ENABLED_MODULES": [
         "thyme",
         "gitmodule",
-        "toggl",
+        "kimai",
+        "local",
         "taiga",
         "jira",
         "slack"
@@ -12,6 +14,12 @@
     "UI_SETTINGS": {
         "toggl": {
             "global": "#E01A22"
+        },
+        "kimai": {
+            "global": "#FF7043"
+        },
+        "local": {
+            "global": "#5C6BC0"
         },
         "thyme": {
             "global": "#1aef65"
@@ -23,6 +31,46 @@
             "global": "#4A154B"
         }
     },
+    "LOCAL": {
+        "group1": {
+            "NAME": "First Group",
+            "PROJECTS": {
+                "Development": "default",
+                "Bug fixing": "bug"
+            }
+        },
+        "group2": {
+            "NAME": "Second Group",
+            "PROJECTS": {
+                "Development": "default"
+            }
+        }
+    },
+
+    "CODEX": {
+        "global": {
+            "BIN": "codex",
+            "MODEL": "gpt-5.6-sol",
+            "EFFORT": "low",
+            "TIMEOUT": 420
+        }
+    },
+
+    "KIMAI": {
+        "global": {
+            "URL": "https://kimai.example.com",
+            "API_KEY": "your-api-token"
+        },
+        "group1": {
+            "NAME": "Customer name as it appears in Kimai",
+            "PROJECTS": {
+                "Development": "default",
+                "Bug fixing": "bug"
+            },
+            "ACTIVITY": 1
+        }
+    },
+
     "TOGGL": {
         "global": {
             "API_KEY": "your-api-key"

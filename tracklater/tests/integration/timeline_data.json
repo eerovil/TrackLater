@@ -1,0 +1,359 @@
+{
+  "source_date": "2026-06-01",
+  "activitywatch": [
+    {
+      "id": "integration-aw-000",
+      "start_time": "2026-06-01 04:16:07",
+      "end_time": "2026-06-01 04:21:05",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n85s - Google Chrome - Feed — scandinavian-outdoor — Sentry - Google Chrome - Eero\n60s - Google Chrome - Logs | SolarWinds Observability - Google Chrome - Eero\n29s - Google Chrome - Elämää Ulkona Metsä - Scandinavian Outdoor - Google Chrome - Eero\n26s - Google Chrome - DisallowedHost: Invalid HTTP_HOST header: 'store.prod.sos.fi'. You may need to add '\n22s - Cursor - stock_updater.py — code [Container Soi project devcontainer (15f2ff5a0aee)]\n12s - Cursor - Cursor\n11s - Google Chrome - dev - Chat - Pinned - Google Chrome - Eero\n10s - Google Chrome - sentry - Chat - Pinned - Google Chrome - Eero\n8s - Terminal - eerovilpponen — grep ◂ -zsh — 269×71\n5s - Terminal - eerovilpponen — ssh ◂ bash so_docker_helper.sh sos up — 131×73\n4s - Google Chrome - Sentry - Google Chrome - Eero\n3s - Finder - Recents\n2s - Terminal - eerovilpponen — -zsh — 131×73\n2s - Terminal - eerovilpponen — docker ◂ bash so_docker_helper.sh sos up — 131×73\n1s - Google Chrome - SystemExit: 1 — scandinavian-outdoor — sos - Google Chrome - Eero\n1s - Google Chrome - Untitled - Google Chrome - Eero\n1s - Google Chrome - SolarWinds Observability - Google Chrome - Eero\n0s - Terminal - eerovilpponen — docker-compose ◂ b\n…"
+    },
+    {
+      "id": "integration-aw-001",
+      "start_time": "2026-06-01 04:21:05",
+      "end_time": "2026-06-01 04:22:52",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n63s - Cursor - stock_updater.py — code [Container Soi project devcontainer (15f2ff5a0aee)]\n13s - Terminal - eerovilpponen — -zsh — 131×73\n6s - Cursor - stock_updater.py (Index) (stock_updater.py) — code [Container Soi project devcontainer (15f\n3s - Terminal - eerovilpponen — ssh ◂ bash so_docker_helper.sh sos up — 131×73\n3s - Terminal - eerovilpponen — docker-compose ◂ bash so_docker_helper.sh sos up — 131×73\n2s - Terminal - eerovilpponen — docker ◂ bash so_docker_helper.sh sos up — 131×73\n2s - Docker Desktop - Docker Desktop\n2s - Docker Desktop - Volumes - Docker Desktop\n2s - Cursor - stock_updater.py (Working Tree) (stock_updater.py) — code [Container Soi project devcontain\n1s - Terminal - eerovilpponen — soi@so-integration: ~ — ssh soi@so-integration.prod.sos.fi — 131×73\n0s - Terminal - eerovilpponen — ssh soi@so-integration.prod.sos.fi — 131×73"
+    },
+    {
+      "id": "integration-aw-002",
+      "start_time": "2026-06-01 04:29:29",
+      "end_time": "2026-06-01 04:34:24",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n123s - Google Chrome - Elämää Ulkona Metsä - Scandinavian Outdoor - Google Chrome - Eero\n78s - Google Chrome - Elämää Ulkona Metsä | Muokkaa dynamic page | Scandinavian Outdoor hallinta - Google \n30s - Google Chrome - Dynamic page (uusi) - Google Chrome - Eero\n29s - Google Chrome - dev - Chat - Pinned - Google Chrome - Eero\n15s - Google Chrome - Untitled - Google Chrome - Eero\n7s - Google Chrome - Koti | Scandinavian Outdoor hallinta - Google Chrome - Eero\n3s - Cursor - stock_updater.py (Index) (stock_updater.py) — code [Container Soi project devcontainer (15f\n3s - Cursor\n2s - Google Chrome - Logs | SolarWinds Observability - Google Chrome - Eero\n0s - Google Chrome - sentry - Chat - Pinned - Google Chrome - Eero\n0s - Google Chrome - admin.sos.fi/hallinta/new_model/storefront/dynamicpage/ - Google Chrome - Eero"
+    },
+    {
+      "id": "integration-aw-003",
+      "start_time": "2026-06-01 04:34:24",
+      "end_time": "2026-06-01 04:38:44",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n55s - Cursor - QuickAddRow.vue — code [Container Sos project devcontainer (ee545a808dfa)]\n40s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n38s - Google Chrome - Elämää Ulkona Metsä - Scandinavian Outdoor - Google Chrome - Eero\n36s - Google Chrome - quick_add_products | Muokkaa general settings | Scandinavian Outdoor hallinta - Goog\n35s - Google Chrome - dev - Chat - Pinned - Google Chrome - Eero\n16s - Google Chrome - admin.sos.fi/hallinta/new_model/storefront/generalsettings/ - Google Chrome - Eero\n11s - Google Chrome\n9s - Cursor - models.py (Working Tree) (models.py) — code [Container Sos project devcontainer (ee545a808d\n5s - Cursor - index.vue — code [Container Sos project devcontainer (ee545a808dfa)]\n4s - Cursor - Cursor\n3s - Cursor - stock_updater.py (Index) (stock_updater.py) — code [Container Soi project devcontainer (15f\n2s - Google Chrome - Elämää Ulkona Metsä | Muokkaa dynamic page | Scandinavian Outdoor hallinta - Google "
+    },
+    {
+      "id": "integration-aw-004",
+      "start_time": "2026-06-01 04:38:44",
+      "end_time": "2026-06-01 04:43:41",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n109s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -\n83s - Google Chrome - Fiksusti Elämää Ulkona - Scandinavian Outdoor - Google Chrome - Eero\n35s - Cursor - QuickAddRow.vue — code [Container Sos project devcontainer (ee545a808dfa)]\n22s - Google Chrome - Asiakaspalvelu - Scandinavian Outdoor - Google Chrome - Eero\n16s - Google Chrome - Maksutavat - Scandinavian Outdoor - Google Chrome - Eero\n8s - Google Chrome - Untitled - Google Chrome - Eero\n6s - Google Chrome - Fiksusti Elämää Ulkona | Muokkaa dynamic page | Scandinavian Outdoor hallinta - Goog\n4s - Google Chrome\n4s - Google Chrome - admin.local.dev.sos.fi:8080/hallinta/new_model/storefront/dynamicpage/ - Google Chro\n1s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero"
+    },
+    {
+      "id": "integration-aw-005",
+      "start_time": "2026-06-01 04:43:41",
+      "end_time": "2026-06-01 04:48:39",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n171s - Cursor - package.json — code [Container Sos project devcontainer (ee545a808dfa)]\n42s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n25s - Google Chrome - Fiksusti Elämää Ulkona - Scandinavian Outdoor - Google Chrome - Eero\n24s - Cursor - build_frontend.sh — code [Container Sos project devcontainer (ee545a808dfa)]\n18s - Cursor - Fiksusti Elämää Ulkona - Scandinavian Outdoor — code [Container Sos project devcontainer (e\n6s - Cursor - Browser Tab — code [Container Sos project devcontainer (ee545a808dfa)]\n2s - Google Chrome\n1s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -"
+    },
+    {
+      "id": "integration-aw-006",
+      "start_time": "2026-06-01 04:48:39",
+      "end_time": "2026-06-01 04:53:30",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n83s - Cursor - build_frontend.sh — code [Container Sos project devcontainer (ee545a808dfa)]\n78s - Cursor - [...slug].vue (Working Tree) ([...slug].vue) — code [Container Sos project devcontainer (ee\n49s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n43s - Cursor - Fiksusti Elämää Ulkona - Scandinavian Outdoor — code [Container Sos project devcontainer (e\n13s - Google Chrome - Hoka Women's Clifton 10 naisten maantiejuoksukengät - Scandinavian Outdoor - Google \n8s - Google Chrome - Fiksusti Elämää Ulkona - Scandinavian Outdoor - Google Chrome - Eero\n5s - Google Chrome - 502 Bad Gateway - Google Chrome - Eero\n3s - Google Chrome - Untitled - Google Chrome - Eero\n1s - Google Chrome - Salomon Active Skin 4 Set juoksuliivi - Scandinavian Outdoor - Google Chrome - Eero\n1s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -"
+    },
+    {
+      "id": "integration-aw-007",
+      "start_time": "2026-06-01 04:53:30",
+      "end_time": "2026-06-01 04:53:54",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n20s - Cursor - [...slug].vue (Working Tree) ([...slug].vue) — code [Container Sos project devcontainer (ee\n2s - Google Chrome - Hoka Women's Clifton 10 naisten maantiejuoksukengät - Scandinavian Outdoor - Google \n1s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero"
+    },
+    {
+      "id": "integration-aw-008",
+      "start_time": "2026-06-01 05:01:33",
+      "end_time": "2026-06-01 05:03:25",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n69s - Cursor - 502 Bad Gateway — code [Container Sos project devcontainer (ee545a808dfa)]\n17s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n9s - Terminal - eerovilpponen — -zsh — 131×73\n8s - Cursor - Browser Tab — code [Container Sos project devcontainer (ee545a808dfa)]\n2s - Finder - Recents\n1s - Main - SKlauncher 3.2.18 build.595\n1s - Cursor - [...slug].vue (Working Tree) ([...slug].vue) — code [Container Sos project devcontainer (ee\n0s - Google Chrome - Hoka Women's Clifton 10 naisten maantiejuoksukengät - Scandinavian Outdoor - Google \n0s - Terminal - eerovilpponen — soi@so-integration: ~/soi — ssh soi@so-integration.prod.sos.fi — 131×73\n0s - Finder"
+    },
+    {
+      "id": "integration-aw-009",
+      "start_time": "2026-06-01 05:20:35",
+      "end_time": "2026-06-01 05:25:30",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n91s - Cursor - b978be4 - Strip Hello Retail a… (2 files) — code [Container Sos project devcontainer (ee545\n57s - Cursor - CursorRemote — code [Container Sos project devcontainer (ee545a808dfa)]\n49s - Cursor - entrypoint.sh — code [Container Sos project devcontainer (ee545a808dfa)]\n39s - Cursor - helloretail.ts — code [Container Sos project devcontainer (ee545a808dfa)]\n25s - Cursor - tasks.json — code [Container Sos project devcontainer (ee545a808dfa)]\n15s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n5s - Cursor - product.vue (Working Tree) (product.vue) — code [Container Sos project devcontainer (ee545a\n5s - Cursor - CursorRemote Setup — code [Container Soi project devcontainer (15f2ff5a0aee)]\n3s - Main - SKlauncher 3.2.18 build.595\n1s - Terminal - eerovilpponen — -zsh — 131×73"
+    },
+    {
+      "id": "integration-aw-010",
+      "start_time": "2026-06-01 05:25:30",
+      "end_time": "2026-06-01 05:30:24",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n74s - Cursor - VS Code Settings — code [Container Sos project devcontainer (ee545a808dfa)]\n70s - Cursor - product.vue (Working Tree) (product.vue) — code [Container Sos project devcontainer (ee545a\n34s - Cursor - entrypoint.sh — code [Container Sos project devcontainer (ee545a808dfa)]\n29s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n22s - Cursor - tasks.json — code [Container Sos project devcontainer (ee545a808dfa)]\n16s - Cursor - Cursor Settings — code [Container Sos project devcontainer (ee545a808dfa)]\n15s - Cursor - Container Tilhi project devcontainer (936fb5735cd5)\n11s - Google Chrome - len5ky/CursorRemote: Remote control for your local Cursor AI agent — monitor session\n5s - Cursor - Cursor\n4s - Google Chrome - It-tuki - Chat - Pinned - Google Chrome - Eero\n3s - Google Chrome - cursorremote - Google Search - Google Chrome - Eero\n2s - Google Chrome\n0s - Google Chrome - dev - Chat - Pinned - Google Chrome - Eero\n0s - Google Chrome - Hoka Women's Clifton 10 naisten maantiejuoksukengät - Scandinavian Outdoor - Google "
+    },
+    {
+      "id": "integration-aw-011",
+      "start_time": "2026-06-01 05:30:24",
+      "end_time": "2026-06-01 05:35:23",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n191s - Cursor - Container Tilhi project devcontainer (936fb5735cd5)\n67s - Cursor - helloretail.ts (Working Tree) (helloretail.ts) — code [Container Sos project devcontainer (\n37s - Google Chrome - Chat - Pinned - Audio playing - Google Chrome - Eero\n1s - Google Chrome - It-tuki - Chat - Pinned - Audio playing - Google Chrome - Eero\n1s - Google Chrome - Fiksusti Elämää Ulkona - Scandinavian Outdoor - Google Chrome - Eero"
+    },
+    {
+      "id": "integration-aw-012",
+      "start_time": "2026-06-01 05:35:23",
+      "end_time": "2026-06-01 05:39:34",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n42s - Google Chrome - Hotfix/2579 clean edit gift category by raneio · Pull Request #2583 · ScandinavianOu\n38s - Google Chrome - dev - Chat - Pinned - Google Chrome - Eero\n38s - Cursor - helloretail.ts (Working Tree) (helloretail.ts) — code [Container Sos project devcontainer (\n27s - Google Chrome - It-tuki - Chat - Pinned - Google Chrome - Eero\n21s - Google Chrome - Chat - Pinned - Audio playing - Google Chrome - Eero\n20s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n15s - Cursor - Container Tilhi project devcontainer (936fb5735cd5)\n12s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n7s - Google Chrome - Pull requests · ScandinavianOutdoor/store - Google Chrome - Eero\n6s - Cursor - tasks.json (Working Tree) (tasks.json) — code [Container Sos project devcontainer (ee545a80\n5s - Google Chrome - Hoka Women's Clifton 10 naisten maantiejuoksukengät - Scandinavian Outdoor - Google \n3s - Google Chrome - It-tuki - Chat - Pinned - Audio playing - Google Chrome - Eero\n3s - Google Chrome - Fiksusti Elämää Ulkona - Scandinavian Outdoor - Google Chrome - Eero\n2s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -\n…"
+    },
+    {
+      "id": "integration-aw-013",
+      "start_time": "2026-06-01 05:39:34",
+      "end_time": "2026-06-01 05:44:28",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n88s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n73s - Google Chrome - DEV-2569 Add possibility to hide products from customers while staff … by JuliusVirt\n71s - Cursor - Container Tilhi project devcontainer (936fb5735cd5)\n21s - Cursor - helloretail.ts (Working Tree) (helloretail.ts) — code [Container Sos project devcontainer (\n13s - Cursor - outdoor\n7s - Cursor - Cursor\n7s - Google Chrome - Fiksusti Elämää Ulkona - Scandinavian Outdoor - Google Chrome - Eero\n4s - Cursor - CursorRemote Setup — code [Container Soi project devcontainer (15f2ff5a0aee)]\n3s - Google Chrome - dev - Chat - Pinned - Google Chrome - Eero\n2s - Google Chrome - It-tuki - Chat - Pinned - Google Chrome - Eero\n1s - Main - SKlauncher 3.2.18 build.595"
+    },
+    {
+      "id": "integration-aw-014",
+      "start_time": "2026-06-01 05:44:28",
+      "end_time": "2026-06-01 05:49:10",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n201s - Cursor - extraclean.py — outdoor\n41s - Google Chrome - Valitse muokattava order | Django-sivuston ylläpito - Google Chrome - Eero\n21s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n9s - Google Chrome - Valitse muokattava incomplete order | Django-sivuston ylläpito - Google Chrome - Eer\n3s - Google Chrome - Sivuston ylläpito | Django-sivuston ylläpito - Google Chrome - Eero\n3s - Google Chrome - Kirjaudu sisään | Django-sivuston ylläpito - Google Chrome - Eero\n1s - Google Chrome\n0s - Google Chrome - It-tuki - Chat - Pinned - Google Chrome - Eero"
+    },
+    {
+      "id": "integration-aw-015",
+      "start_time": "2026-06-01 05:49:10",
+      "end_time": "2026-06-01 05:54:07",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n154s - Cursor - contactinfo_by_country.json — outdoor\n45s - Cursor - extraclean.py — outdoor\n24s - Google Chrome - dev - Chat - Pinned - Google Chrome - Eero\n19s - Google Chrome - quick_add_products | Muokkaa general settings | Scandinavian Outdoor hallinta - Goog\n18s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n7s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n6s - Google Chrome - Julius Virtanen - Chat - Pinned - Google Chrome - Eero\n3s - Google Chrome - DEV-2569 Add possibility to hide products from customers while staff … by JuliusVirt\n3s - Google Chrome\n2s - Google Chrome - Fiksusti Elämää Ulkona - Scandinavian Outdoor - Google Chrome - Eero\n2s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -\n1s - Google Chrome - Elämää Ulkona Metsä - Scandinavian Outdoor - Google Chrome - Eero\n1s - Google Chrome - Untitled - Google Chrome - Eero\n1s - Terminal - eerovilpponen — -zsh — 131×73\n1s - Google Chrome - Chat - Pinned - Audio playing - Google Chrome - Eero\n0s - Finder\n0s - Google Chrome - Valitse muokattava order | Django-sivuston ylläpito - Google Chrome - Eero"
+    },
+    {
+      "id": "integration-aw-016",
+      "start_time": "2026-06-01 05:54:07",
+      "end_time": "2026-06-01 05:58:43",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n95s - Google Chrome - mvilpponen (DM) - Protecomp - Slack - Google Chrome - Eero\n49s - Cursor - contactinfo_by_country.json — outdoor\n33s - Cursor - Cursor\n20s - Cursor - Container Tilhi project devcontainer (936fb5735cd5)\n13s - Google Chrome - Teemu Hakulinen - Chat - Pinned - Google Chrome - Eero\n13s - Cursor - VS Code Settings — outdoor\n10s - Cursor - models.py — code [Container Storm project devcontainer (226dada04bd8)]\n8s - Google Chrome - quick_add_products | Muokkaa general settings | Scandinavian Outdoor hallinta - Goog\n8s - Google Chrome - Inbox (801) - eero.vilpponen@gmail.com - Gmail - Google Chrome - Eero\n5s - Google Chrome - Inbox (800) - eero.vilpponen@gmail.com - Gmail - Google Chrome - Eero\n5s - Cursor - models.py — code [Container Storm project devcontainer (5ba92c94dac0)]\n3s - Google Chrome - Slack - Google Chrome - Eero\n1s - Google Chrome - Linode (Akamai Cloud Computing) - Invoice [31842788] - eero.vilpponen@gmail.com - Gm\n1s - Cursor - Cursor Settings — outdoor\n1s - Google Chrome - reddit: the front page of the internet - Google Chrome - Eero\n1s - Cursor - gitmodule.py (Working Tree) (gitmodule.py) — TrackLater\n0s - Cursor - activitywatch.py (Working Tr\n…"
+    },
+    {
+      "id": "integration-aw-017",
+      "start_time": "2026-06-01 05:58:43",
+      "end_time": "2026-06-01 06:02:52",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n82s - Cursor - main.py (Working Tree) (main.py) — TrackLater\n39s - Cursor - contactinfo_by_country.json — outdoor\n34s - Google Chrome - ScandinavianOutdoor/store: Scandinavian Outdoor Store project, joint repository - Go\n16s - Cursor - helloretail.ts (Working Tree) (helloretail.ts) — code [Container Sos project devcontainer (\n8s - Google Chrome - Inbox (800) - eero.vilpponen@gmail.com - Gmail - High memory usage - 1.2 GB - Google\n8s - Preview - Copy of Tervetuloa copy.pdf – 1 page\n7s - Google Chrome - Salomon Active Skin 4 Set juoksuliivi - Scandinavian Outdoor - Google Chrome - Eero\n7s - Google Chrome - mvilpponen (DM) - Protecomp - Slack - Google Chrome - Eero\n6s - Google Chrome - storm-sentry (Channel) - Protecomp - Slack - Google Chrome - Eero\n6s - Google Chrome - Hoka Women's Clifton 10 naisten maantiejuoksukengät - Scandinavian Outdoor - Google \n5s - Finder - Downloads\n4s - Google Chrome - valvonta (Channel) - Protecomp - Slack - Google Chrome - Eero\n3s - Google Chrome - len5ky/CursorRemote: Remote control for your local Cursor AI agent — monitor session\n2s - Google Chrome - Viesti Wilmasta: kiitos ja lätkät - eero.vilpponen@gmail.com - Gmail - High memory u\n2s - Goog\n…"
+    },
+    {
+      "id": "integration-aw-018",
+      "start_time": "2026-06-01 06:02:52",
+      "end_time": "2026-06-01 06:07:39",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n172s - Cursor - contactinfo_by_country.json — outdoor\n41s - Cursor - helloretail.ts (Working Tree) (helloretail.ts) — code [Container Sos project devcontainer (\n16s - Google Chrome - Meikäläinen Matti - Esimerkkikatu 1 | Muokkaa address | Django-sivuston ylläpito - G\n7s - Google Chrome - Salomon Active Skin 4 Set juoksuliivi - Scandinavian Outdoor - Google Chrome - Eero\n7s - Google Chrome - Valitse muokattava in progress order | Django-sivuston ylläpito - Google Chrome - Ee\n6s - Cursor - job.yaml (Working Tree) (job.yaml) — outdoor\n5s - Google Chrome - Order ID S20378092 placed by Matti Meikäläinen on 2026-05-26 09:20:52, 2 rows, total\n4s - Google Chrome - Tilausten haku - Google Chrome - Eero\n4s - Google Chrome - valvonta (Channel) - Protecomp - Slack - Google Chrome - Eero\n4s - Google Chrome - fi.local.dev.sos.fi:8080 - Google Chrome - Eero\n3s - Google Chrome\n3s - Google Chrome - Sivuston ylläpito | Django-sivuston ylläpito - Google Chrome - Eero\n1s - Google Chrome - Kirjaudu sisään | Django-sivuston ylläpito - Google Chrome - Eero\n1s - Cursor - test_extraclean_local.sh — outdoor\n1s - Cursor - cron_job.yaml (Working Tree) (cron_job.yaml) — outdoor\n0s - Cursor - update_cro\n…"
+    },
+    {
+      "id": "integration-aw-019",
+      "start_time": "2026-06-01 06:07:39",
+      "end_time": "2026-06-01 06:12:04",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n143s - Cursor - helloretail.ts (Working Tree) (helloretail.ts) — code [Container Sos project devcontainer (\n43s - Google Chrome - VUE SPA - Google Chrome - Eero\n39s - Cursor - tracklater.json — TrackLater\n21s - Cursor\n11s - Cursor - main.py (Working Tree) (main.py) — TrackLater\n3s - Google Chrome - fi.local.dev.sos.fi:8080 - Google Chrome - Eero\n1s - Google Chrome\n0s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -"
+    },
+    {
+      "id": "integration-aw-020",
+      "start_time": "2026-06-01 06:12:04",
+      "end_time": "2026-06-01 06:16:59",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n94s - Cursor - tracklater.json — TrackLater\n50s - Cursor - helloretail.ts (Working Tree) (helloretail.ts) — code [Container Sos project devcontainer (\n36s - Google Chrome - VUE SPA - Google Chrome - Eero\n25s - Google Chrome - Phosphor Icons - Google Chrome - Eero\n17s - Google Chrome - font awesome - Google Search - Google Chrome - Eero\n11s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n11s - Google Chrome - Vaihde awesome iconit · Issue #2553 · ScandinavianOutdoor/store - Google Chrome - Ee\n10s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -\n7s - Google Chrome - valvonta (Channel) - Protecomp - Slack - Google Chrome - Eero\n4s - Google Chrome\n4s - Google Chrome - phosphor-icons/homepage: The homepage of Phosphor Icons, a flexible icon family for \n2s - Google Chrome - Font Awesome - Google Chrome - Eero\n2s - Google Chrome - Dynamic page (uusi) - Google Chrome - Eero\n2s - Google Chrome - Untitled - Google Chrome - Eero\n1s - Google Chrome - google.com/url?sa=j&url=https%3A%2F%2Fgithub.com%2FScandinavianOutdoor%2Fstore%2Fiss\n1s - Google Chrome - Hoka Women's Clifton 10 naisten maantiejuoksukengät - Scandinavia\n…"
+    },
+    {
+      "id": "integration-aw-021",
+      "start_time": "2026-06-01 06:16:59",
+      "end_time": "2026-06-01 06:21:59",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n81s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n62s - Cursor - models.py — code [Container Sos project devcontainer (ee545a808dfa)]\n33s - Cursor - debug_set_customer_passwords.py — code [Container Sos project devcontainer (ee545a808dfa)]\n20s - Google Chrome - VUE SPA - Google Chrome - Eero\n18s - Google Chrome - Material Design Icons - Icon Library - Pictogrammers - Google Chrome - Eero\n18s - Cursor - Container Tilhi project devcontainer (936fb5735cd5)\n10s - Cursor - helloretail.ts (Working Tree) (helloretail.ts) — code [Container Sos project devcontainer (\n10s - Google Chrome - boba fett icon svg - Google Search - Google Chrome - Eero\n9s - Google Chrome - dev - Chat - Pinned - Google Chrome - Eero\n9s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n8s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -\n4s - Cursor - tracklater.json — TrackLater\n3s - Google Chrome - MDISVG - Material Design Icons as SVG - Google Chrome - Eero\n3s - Google Chrome - Vaihde awesome iconit · Issue #2553 · ScandinavianOutdoor/store - Google Chrome - Ee\n2s - Google Chrome - Hoka Women's Clifton 10 naisten maantiejuoksukengät\n…"
+    },
+    {
+      "id": "integration-aw-022",
+      "start_time": "2026-06-01 06:21:59",
+      "end_time": "2026-06-01 06:26:32",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n123s - Google Chrome - VUE SPA - Google Chrome - Eero\n80s - Cursor - tracklater.json — TrackLater\n8s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n4s - Google Chrome - Vaihde awesome iconit · Issue #2553 · ScandinavianOutdoor/store - Google Chrome - Ee\n2s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n1s - Google Chrome - It-tuki - Chat - Pinned - Google Chrome - Eero\n0s - Google Chrome - font awesome - Google Search - Google Chrome - Eero"
+    },
+    {
+      "id": "integration-aw-023",
+      "start_time": "2026-06-01 06:28:35",
+      "end_time": "2026-06-01 06:33:18",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n106s - Cursor - debug_set_customer_passwords.py (Working Tree) (debug_set_customer_passwords.py) — code [Co\n95s - Google Chrome - VUE SPA - Google Chrome - Eero\n36s - Cursor - tracklater.json — TrackLater\n21s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n8s - Google Chrome - font awesome - Google Search - Google Chrome - Eero\n4s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n3s - Cursor - models.py — code [Container Sos project devcontainer (ee545a808dfa)]\n3s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -\n1s - Google Chrome - Vaihde awesome iconit · Issue #2553 · ScandinavianOutdoor/store - Google Chrome - Ee"
+    },
+    {
+      "id": "integration-aw-024",
+      "start_time": "2026-06-01 06:33:18",
+      "end_time": "2026-06-01 06:38:12",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n125s - Cursor - debug_set_customer_passwords.py (Working Tree) (debug_set_customer_passwords.py) — code [Co\n36s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n36s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n22s - Cursor - tracklater.json — TrackLater\n14s - Google Chrome - VUE SPA - Google Chrome - Eero\n13s - Google Chrome - Solteq PimLite REST API - Google Chrome - Eero\n9s - Google Chrome - font awesome - Google Search - Google Chrome - Eero\n7s - Google Chrome\n6s - Google Chrome - 10.168.200.203:8080/api/articles/model?m=87230 - Google Chrome - Eero\n6s - Google Chrome - localhost:5001 says\n6s - Google Chrome - 10.168.200.203:8080/api/articles/model?m=065-0576 - Google Chrome - Eero\n2s - Google Chrome - It-tuki - Chat - Pinned - Google Chrome - Eero\n2s - Google Chrome - Chat - Pinned - High memory usage - 803 MB - Google Chrome - Eero\n1s - Google Chrome - Vaihde awesome iconit · Issue #2553 · ScandinavianOutdoor/store - Google Chrome - Ee\n0s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -\n0s - Terminal - eerovilpponen — -zsh — 131×73"
+    },
+    {
+      "id": "integration-aw-025",
+      "start_time": "2026-06-01 06:38:12",
+      "end_time": "2026-06-01 06:43:11",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n105s - Cursor - tracklater.json — TrackLater\n77s - Google Chrome - VUE SPA - Google Chrome - Eero\n62s - Cursor - debug_set_customer_passwords.py (Working Tree) (debug_set_customer_passwords.py) — code [Co\n28s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n12s - Cursor - AdminShortcut.vue (Working Tree) (AdminShortcut.vue) — code [Container Sos project devconta\n11s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -\n1s - Google Chrome - localhost:5001 says\n0s - Google Chrome - Chat - Pinned - High memory usage - 803 MB - Google Chrome - Eero"
+    },
+    {
+      "id": "integration-aw-026",
+      "start_time": "2026-06-01 06:43:11",
+      "end_time": "2026-06-01 06:46:44",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n99s - Cursor - tracklater.json — TrackLater\n34s - Cursor - git-error-1780296222374 — code [Container Sos project devcontainer (ee545a808dfa)]\n26s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n20s - Google Chrome - ActivityWatch - Google Chrome - Eero\n10s - Google Chrome - localhost:5001 says\n10s - Google Chrome - VUE SPA - Google Chrome - Eero\n7s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n2s - Cursor - AdminShortcut.vue (Working Tree) (AdminShortcut.vue) — code [Container Sos project devconta\n2s - Cursor\n1s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -"
+    },
+    {
+      "id": "integration-aw-027",
+      "start_time": "2026-06-01 06:46:44",
+      "end_time": "2026-06-01 06:51:16",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n106s - Google Chrome - VUE SPA - Google Chrome - Eero\n62s - Cursor - tracklater.json — TrackLater\n60s - Cursor - OrderCard.vue — code [Container Sos project devcontainer (ee545a808dfa)]\n24s - Cursor - translations.ts — code [Container Sos project devcontainer (ee545a808dfa)]\n5s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n3s - Cursor - activitywatch.py — TrackLater\n2s - Cursor - menuStore.ts — code [Container Sos project devcontainer (ee545a808dfa)]\n2s - Google Chrome - Vaihde awesome iconit · Issue #2553 · ScandinavianOutdoor/store - Google Chrome - Ee\n1s - Cursor - git-error-1780296222374 — code [Container Sos project devcontainer (ee545a808dfa)]\n0s - Google Chrome - 10.168.200.203:8080/api/articles/model?m=065-0576 - Google Chrome - Eero\n0s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -"
+    },
+    {
+      "id": "integration-aw-028",
+      "start_time": "2026-06-01 06:51:16",
+      "end_time": "2026-06-01 06:56:13",
+      "group": "storm",
+      "title": "",
+      "text": "storm\n135s - Cursor - activitywatch.py — TrackLater\n65s - Google Chrome - VUE SPA - Google Chrome - Eero\n24s - Google Chrome - reddit.com/r/cursor/comments/1ohvfoy/is_cursor_still_worth_it_now/ - Google Chrome -\n18s - Cursor - OrderCard.vue — code [Container Sos project devcontainer (ee545a808dfa)]\n9s - Cursor - models.py — code [Container Storm project devcontainer (226dada04bd8)]\n8s - Google Chrome - cursor is good reddit - Google Search - Google Chrome - Eero\n5s - Google Chrome - 10.168.200.203:8080/api/articles/model?m=065-0576 - Google Chrome - Eero\n4s - Google Chrome - Vaihde awesome iconit · Issue #2553 · ScandinavianOutdoor/store - Google Chrome - Ee\n2s - Google Chrome - localhost:5001 says\n2s - Google Chrome - Chat - Pinned - Google Chrome - Eero"
+    },
+    {
+      "id": "integration-aw-029",
+      "start_time": "2026-06-01 06:56:13",
+      "end_time": "2026-06-01 07:01:06",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n75s - Google Chrome - VUE SPA - Google Chrome - Eero\n70s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n58s - Cursor - activitywatch.py — TrackLater\n35s - Cursor - SecondHandSection.vue (Working Tree) (SecondHandSection.vue) — code [Container Sos project \n19s - Cursor - utils.py (Working Tree) (utils.py) — code [Container Sos project devcontainer (ee545a808dfa\n12s - Google Chrome - localhost:5001 says\n8s - Cursor - __init__.py — code [Container Sos project devcontainer (ee545a808dfa)]\n3s - Cursor - test_clean_product_data.py — code [Container Sos project devcontainer (ee545a808dfa)]\n3s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -\n2s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n1s - Cursor - OrderCard.vue — code [Container Sos project devcontainer (ee545a808dfa)]\n1s - Google Chrome - cursor is good reddit - Google Search - Google Chrome - Eero\n1s - Google Chrome - Vaihde awesome iconit · Issue #2553 · ScandinavianOutdoor/store - Google Chrome - Ee"
+    },
+    {
+      "id": "integration-aw-030",
+      "start_time": "2026-06-01 07:01:06",
+      "end_time": "2026-06-01 07:05:49",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n123s - Cursor - activitywatch.py — TrackLater\n44s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n37s - Cursor - SecondHandSection.vue (Working Tree) (SecondHandSection.vue) — code [Container Sos project \n24s - Google Chrome - VUE SPA - Google Chrome - Eero\n18s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n15s - Google Chrome - Valitse muokattava shipped order | Django-sivuston ylläpito - Google Chrome - Eero\n9s - Google Chrome - cursor is good reddit - Google Search - Google Chrome - Eero\n6s - Google Chrome - Sivuston ylläpito | Django-sivuston ylläpito - Google Chrome - Eero\n2s - Cursor - Container Tilhi project devcontainer (936fb5735cd5)\n1s - Google Chrome - It-tuki - Chat - Pinned - Google Chrome - Eero"
+    },
+    {
+      "id": "integration-aw-031",
+      "start_time": "2026-06-01 07:05:49",
+      "end_time": "2026-06-01 07:10:37",
+      "group": null,
+      "title": "",
+      "text": "111s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n54s - Cursor - debug_set_customer_passwords.py — code [Container Sos project devcontainer (ee545a808dfa)]\n41s - Cursor - activitywatch.py — TrackLater\n22s - Google Chrome - VUE SPA - Google Chrome - Eero\n20s - Google Chrome - Sivuston ylläpito | Django-sivuston ylläpito - Google Chrome - Eero\n15s - Google Chrome - maanvuokra asuntokaupat - Google Search - Google Chrome - Eero\n9s - Google Chrome - Valitse muokattava tekso receipt order | Django-sivuston ylläpito - Google Chrome - \n7s - Google Chrome\n2s - Cursor - SecondHandSection.vue (Working Tree) (SecondHandSection.vue) — code [Container Sos project \n1s - Google Chrome - localhost:5001 says"
+    },
+    {
+      "id": "integration-aw-032",
+      "start_time": "2026-06-01 07:10:37",
+      "end_time": "2026-06-01 07:15:29",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n87s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n57s - Google Chrome - Chat - Pinned - Audio playing - Google Chrome - Eero\n25s - Google Chrome - maanvuokra asuntokaupat - Google Search - Google Chrome - Eero\n18s - Google Chrome - Asuntokaupoilla on syytä pyytää ja lukea tämä sopimus tarkasti: ”Ihmiset eivät aina \n13s - Google Chrome - Chat - Pinned - High memory usage - 810 MB - Google Chrome - Eero\n12s - Google Chrome - Google Calendar - Week of 9 February 2026 - Google Chrome - Eero\n11s - Google Chrome - VUE SPA - Google Chrome - Eero\n9s - Cursor - activitywatch.py — TrackLater\n9s - Cursor - debug_set_customer_passwords.py — code [Container Sos project devcontainer (ee545a808dfa)]\n6s - Google Chrome - dev - Chat - Pinned - Google Chrome - Eero\n6s - Google Chrome - Scandinavian Outdoor - Retkeilyvarusteet ja ulkoiluvaatteet - Scandinavian Outdoor -\n6s - Google Chrome - Chat - Pinned - Google Chrome - Eero\n5s - Google Chrome - Chat - Pinned - Audio playing - High memory usage - 820 MB - Google Chrome - Eero\n5s - Google Chrome - Google Calendar - Week of 2 March 2026 - Google Chrome - Eero\n5s - Google Chrome - Google Calendar - Week of 16 February 2026 - Go\n…"
+    },
+    {
+      "id": "integration-aw-033",
+      "start_time": "2026-06-01 07:15:29",
+      "end_time": "2026-06-01 07:20:17",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n86s - Cursor - debug_set_customer_passwords.py — code [Container Sos project devcontainer (ee545a808dfa)]\n37s - Cursor - utils.py (Working Tree) (utils.py) — code [Container Sos project devcontainer (ee545a808dfa\n32s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n27s - Cursor - SecondHandSection.vue (Working Tree) (SecondHandSection.vue) — code [Container Sos project \n25s - Google Chrome - Teemu Hakulinen - Chat - Pinned - High memory usage - 820 MB - Google Chrome - Eero\n18s - Google Chrome - Valitse muokattava shipped order | Django-sivuston ylläpito - Google Chrome - Eero\n13s - Google Chrome - 1 rows from order Order ID M666226050655167 placed by Matti Meikäläinen on 2026-05-0\n10s - Google Chrome - Teemu Hakulinen - Chat - Pinned - Audio playing - High memory usage - 819 MB - Googl\n10s - Google Chrome - VUE SPA - Google Chrome - Eero\n3s - Cursor - activitywatch.py — TrackLater\n3s - Google Chrome - Valitse muokattava tekso receipt order | Django-sivuston ylläpito - Google Chrome - \n3s - Google Chrome - Chat - Pinned - Audio playing - High memory usage - 820 MB - Google Chrome - Eero\n3s - Cursor - ensure_second_hand_local_eligibility.py — code [Container Sos\n…"
+    },
+    {
+      "id": "integration-aw-034",
+      "start_time": "2026-06-01 07:20:17",
+      "end_time": "2026-06-01 07:22:05",
+      "group": null,
+      "title": "",
+      "text": "85s - Cursor - activitywatch.py — TrackLater\n21s - Google Chrome - VUE SPA - Google Chrome - Eero\n1s - Google Chrome - Teemu Hakulinen - Chat - Pinned - High memory usage - 836 MB - Google Chrome - Eero"
+    },
+    {
+      "id": "integration-aw-035",
+      "start_time": "2026-06-01 07:27:45",
+      "end_time": "2026-06-01 07:32:22",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n115s - Google Chrome - mvilpponen (DM) - Protecomp - Slack - Pinned - Google Chrome - Eero\n52s - Cursor - SecondHandSection.vue (Working Tree) (SecondHandSection.vue) — code [Container Sos project \n18s - Google Chrome - Cursor - The best way to code with AI - Google Chrome - Eero\n17s - Google Chrome - mvilpponen (DM) - Protecomp - 1 new item - Slack - Pinned - Google Chrome - Eero\n16s - Google Chrome - Which Models used in Auto mode? - Support / Help - Cursor - Community Forum - Google\n11s - Cursor - git-error-1780299125445 — code [Container Sos project devcontainer (ee545a808dfa)]\n8s - Google Chrome - Which Models used in Auto mode? - Help - Cursor - Community Forum - Google Chrome - \n6s - Google Chrome\n6s - Google Chrome - cursor auto model - Google Search - Google Chrome - Eero\n5s - Google Chrome - Automations | Cursor - Google Chrome - Eero\n2s - Google Chrome - It-tuki - Chat - Pinned - Audio playing - High memory usage - 853 MB - Google Chrome\n2s - Cursor\n2s - Google Chrome - Vaihde awesome iconit · Issue #2553 · ScandinavianOutdoor/store - Google Chrome - Ee\n1s - Google Chrome - It-tuki - Chat - Pinned - High memory usage - 843 MB - Google Chrome - Eero\n1s - Google Ch\n…"
+    },
+    {
+      "id": "integration-aw-036",
+      "start_time": "2026-06-01 07:32:22",
+      "end_time": "2026-06-01 07:35:39",
+      "group": "storm",
+      "title": "",
+      "text": "storm\n101s - Cursor - git-error-1780299125445 — code [Container Sos project devcontainer (ee545a808dfa)]\n46s - Google Chrome - Cursor - The best way to code with AI - Google Chrome - Eero\n23s - Google Chrome - mvilpponen (DM) - Protecomp - Slack - Pinned - Google Chrome - Eero\n16s - Google Chrome - It-tuki - Chat - Pinned - High memory usage - 831 MB - Google Chrome - Eero\n9s - Cursor - Cursor Settings — code [Container Storm project devcontainer (226dada04bd8)]\n0s - Terminal - eerovilpponen — -zsh — 131×73"
+    },
+    {
+      "id": "integration-aw-037",
+      "start_time": "2026-06-01 07:52:26",
+      "end_time": "2026-06-01 07:53:05",
+      "group": null,
+      "title": "",
+      "text": "11s - Google Chrome - ChatGPT - Google Chrome - Eero\n6s - Google Chrome - Overview - Claude Code Docs - Google Chrome - Eero\n6s - Google Chrome - mvilpponen (DM) - Protecomp - Slack - Pinned - Google Chrome - Eero\n4s - Google Chrome - claude code - Google Search - Google Chrome - Eero\n3s - Google Chrome - cursor is good reddit - Google Search - Google Chrome - Eero\n3s - Google Chrome - Dynamic page (uusi) - Google Chrome - Eero\n1s - Google Chrome - VUE SPA - Google Chrome - Eero\n1s - Google Chrome - downloads.claude.ai/claude-code-releases/bootstrap.sh - Google Chrome - Eero\n0s - Google Chrome - Claude code in Cursor - Google Chrome - Eero"
+    },
+    {
+      "id": "integration-aw-038",
+      "start_time": "2026-06-01 08:19:45",
+      "end_time": "2026-06-01 08:24:25",
+      "group": "storm",
+      "title": "",
+      "text": "storm\n118s - Cursor - Cursor Settings — code [Container Storm project devcontainer (226dada04bd8)]\n77s - Google Chrome - downloads.claude.ai/claude-code-releases/bootstrap.sh - Google Chrome - Eero\n31s - Google Chrome - Claude Code in Cursor - Google Chrome - Eero\n15s - Google Chrome - Sign in - Claude - Google Chrome - Eero\n10s - Google Chrome - Secure link to log in to Claude.ai | 2026-06-01 11:24:01 - eero.vilpponen@gmail.com \n5s - Google Chrome - Claude Platform - Google Chrome - Eero\n4s - Google Chrome - ! mvilpponen (DM) - Protecomp - Slack - Pinned - Google Chrome - Eero\n2s - Google Chrome - Use claude.ai with google.com\n1s - Google Chrome\n1s - Google Chrome - It-tuki - Chat - Pinned - High memory usage - 862 MB - Google Chrome - Eero\n1s - Google Chrome - mvilpponen (DM) - Protecomp - Slack - Pinned - Google Chrome - Eero\n1s - Google Chrome - Inbox (802) - eero.vilpponen@gmail.com - Gmail - Google Chrome - Eero\n1s - Main - SKlauncher 3.2.18 build.595\n0s - Google Chrome - Gmail - Google Chrome - Eero\n0s - loginwindow - Login"
+    },
+    {
+      "id": "integration-aw-039",
+      "start_time": "2026-06-01 08:24:25",
+      "end_time": "2026-06-01 08:27:01",
+      "group": "storm",
+      "title": "",
+      "text": "storm\n36s - Cursor - Cursor Settings — code [Container Storm project devcontainer (226dada04bd8)]\n26s - Google Chrome - Cursor - The best way to code with AI - Google Chrome (Incognito)\n14s - Google Chrome - Sign up for Cursor - eero.vilpponen@gmail.com - Gmail - Google Chrome - Eero\n13s - Google Chrome\n13s - Google Chrome - Sign in - Google Chrome (Incognito)\n9s - Google Chrome - Accounts and sync, Eero Vilpponen, eero.vilpponen@gmail.com\n8s - Google Chrome - Check your email - Google Chrome (Incognito)\n7s - Google Chrome - Cursor Agent - Turn your ideas into code - Google Chrome - Eero\n5s - Cursor - admin.py — code [Container Storm project devcontainer (226dada04bd8)]\n4s - Google Chrome - cursor multiple accounts - Google Search - Google Chrome (Incognito)\n3s - Google Chrome - downloads.claude.ai/claude-code-releases/bootstrap.sh - Google Chrome - Eero\n2s - Google Chrome - Inbox (802) - eero.vilpponen@gmail.com - Gmail - Google Chrome - Eero\n1s - Google Chrome - cursor - Google Search - Google Chrome - Eero\n1s - Google Chrome - Secure link to log in to Claude.ai | 2026-06-01 11:24:01 - eero.vilpponen@gmail.com \n1s - Google Chrome - google.com/search?q=cursor+multiple+accounts&oq=\n…"
+    },
+    {
+      "id": "integration-aw-040",
+      "start_time": "2026-06-01 08:27:01",
+      "end_time": "2026-06-01 08:30:44",
+      "group": "storm",
+      "title": "",
+      "text": "storm\n152s - Google Chrome - Two account one user, how? - Support / Help - Cursor - Community Forum - Google Chro\n45s - Cursor - SecondHandSection.vue (Working Tree) (SecondHandSection.vue) — code [Container Sos project \n12s - Cursor - admin.py — code [Container Storm project devcontainer (226dada04bd8)]\n11s - Cursor - git-error-1780299125445 — code [Container Sos project devcontainer (ee545a808dfa)]\n1s - Google Chrome - Sign up for Cursor - eero.vilpponen@gmail.com - Gmail - Google Chrome - Eero"
+    },
+    {
+      "id": "integration-aw-041",
+      "start_time": "2026-06-01 08:30:44",
+      "end_time": "2026-06-01 08:33:50",
+      "group": "outdoor",
+      "title": "",
+      "text": "outdoor\n80s - Cursor - SecondHandSection.vue (Working Tree) (SecondHandSection.vue) — code [Container Sos project \n27s - Google Chrome - Fast and reliable end-to-end testing for modern web apps | Playwright - Google Chrom\n19s - Google Chrome - mvilpponen (DM) - Protecomp - Slack - Pinned - Google Chrome - Eero\n14s - Cursor - Container Tilhi project devcontainer (936fb5735cd5)\n13s - Google Chrome - dev - Chat - Pinned - High memory usage - 855 MB - Google Chrome - Eero\n7s - Google Chrome - Sign up for Cursor - eero.vilpponen@gmail.com - Gmail - Google Chrome - Eero\n3s - Google Chrome - Two account one user, how? - Support / Help - Cursor - Community Forum - Google Chro\n3s - Google Chrome - Tilausten haku - Google Chrome - Eero\n3s - Google Chrome - VUE SPA - Google Chrome - Eero\n2s - Cursor - activitywatch.py — TrackLater\n2s - Google Chrome\n2s - Google Chrome - playwright - Google Search - Google Chrome - Eero\n1s - Google Chrome - Scandinavian Outdoor - Google Chrome - Eero\n1s - Google Chrome - downloads.claude.ai/claude-code-releases/bootstrap.sh - Google Chrome - Eero\n0s - Google Chrome - Claude Code in Cursor - Google Chrome - Eero\n0s - Main - SKlauncher 3.2.18 build.595"
+    }
+  ],
+  "git_commits": [
+    {
+      "id": "integration-git-0",
+      "start_time": "2026-06-01 04:22:44",
+      "end_time": null,
+      "group": "outdoor",
+      "title": "",
+      "text": "soi [master] - Remove log\nlocal_apps/pimlite/stock_updater.py"
+    },
+    {
+      "id": "integration-git-1",
+      "start_time": "2026-06-01 06:06:20",
+      "end_time": null,
+      "group": "metso",
+      "title": "",
+      "text": "metso [master] - Update extraclean to convert all tilhi contact info to dummy addresses (not random strings)\nhelm/app/jobs/reset_database/contactinfo_by_country.json\nhelm/app/jobs/reset_database/cron_job.yaml\nhelm/app/jobs/reset_database/extraclean.py\nhelm/app/jobs/reset_database/job.yaml\nhelm/app/jobs/reset_database/reset_database.sh\nhelm/app/jobs/reset_database/run.sh\nhelm/app/jobs/reset_database/test_extraclean_local.sh\nhelm/app/jobs/reset_database/update_cronjob.sh"
+    }
+  ]
+}

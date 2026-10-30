@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
+from time import sleep
 
 import importlib
 from typing import Dict
@@ -16,9 +17,12 @@ logger = logging.getLogger(__name__)
 
 
 def store_parser_to_database(parser, module_name, start_date, end_date):
+    # Drafts are a toggl-only concept (see tracklater.billing); a fetch refreshes
+    # synced rows but must not clobber toggl drafts that were never pushed. Every
+    # other module's rows have is_draft False, so they refresh normally.
     Entry.query.filter(
         Entry.module == module_name, Entry.start_time >= start_date,
-        Entry.start_time <= end_date
+        Entry.start_time <= end_date, Entry.is_draft == False  # noqa: E712
     ).delete()
     for entry in parser.entries:
         entry.module = module_name
@@ -26,6 +30,12 @@ def store_parser_to_database(parser, module_name, start_date, end_date):
     for issue in parser.issues:
         issue.module = module_name
         db.session.merge(issue)
+
+    # Delete old projects
+    Project.query.filter(
+        Project.module == module_name
+    ).delete()
+
     for project in parser.projects:
         project.module = module_name
         db.session.merge(project)
@@ -63,8 +73,12 @@ class Parser(object):
             )
             if getattr(module, 'Parser', None) is None:
                 logger.warning('Module %s has no Parser class', module_name)
-            parser = module.Parser(self.start_date, self.end_date)  # type: ignore
-            self.modules[module_name] = parser
+            try:
+                parser = module.Parser(self.start_date, self.end_date)  # type: ignore
+                self.modules[module_name] = parser
+            except Exception as e:
+                logger.exception("Error initializing parser for module %s", module_name)
+                continue
 
     def parse(self) -> None:
         parsers = []
@@ -73,13 +87,37 @@ class Parser(object):
         for module_name, parser in self.modules.items():
             set_parser_caching_data(parser, module_name)
             logger.warning("Parsing %s", module_name)
-            parser.parse()
+            try:
+                parser.parse()
+            except Exception as e:
+                logger.exception("Error parsing module %s", module_name)
+                continue
             parsers.append((module_name, parser))
+            module_g2p = {project.group: project.pid for project in parser.projects}
+            module_p2g = {str(project.pid): project.group for project in parser.projects}
             for entry in parser.entries:
                 if not entry.project and entry.group:
-                    entry.project = group_to_project.get(entry.group, None)
+                    entry.project = module_g2p.get(
+                        entry.group, group_to_project.get(entry.group, None)
+                    )
                 if not entry.group and entry.project:
-                    entry.group = project_to_group.get(str(entry.project), None)
-            store_parser_to_database(self.modules[module_name], module_name,
-                                     start_date=self.start_date, end_date=self.end_date)
-            logger.warning("Task done %s", module_name)
+                    entry.group = module_p2g.get(
+                        str(entry.project), project_to_group.get(str(entry.project), None)
+                    )
+            index = 0
+            while True:
+                index += 1
+                if index > 10:
+                    logger.error("Task failed %s", module_name)
+                    break
+                try:
+                    store_parser_to_database(self.modules[module_name], module_name,
+                                            start_date=self.start_date, end_date=self.end_date)
+                    logger.warning("Task done %s", module_name)
+                    break
+                except Exception as e:
+                    logger.exception(e)
+                    db.session.rollback()
+                    logger.warning("Task retry %s", module_name)
+                    sleep(1)
+
