@@ -237,7 +237,7 @@ Time tracking (for billing) is done through Toggl. Also, both groups happen to h
             "INCLUDE_UNGROUPED": false  # true also shows chats outside every group's DIRS
         },
         # A chat run in (or under) one of these folders belongs to the group.
-        # Without any DIRS, the GIT groups' REPOS are used instead.
+        # A group without DIRS uses its GIT REPOS instead.
         "group1": {
             "DIRS": ["/full/path/to/group1/repo"]
         }

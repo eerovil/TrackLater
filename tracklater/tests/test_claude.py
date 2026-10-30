@@ -61,6 +61,17 @@ def test_group_for_cwd_prefers_closest_dir(monkeypatch):
     assert group_for_cwd(None, pairs) is None
 
 
+def test_group_dirs_mix_claude_dirs_and_git_repos_per_group(monkeypatch):
+    # group1 sets its own DIRS; group2 still maps through GIT REPOS.
+    monkeypatch.setattr('tracklater.settings.CLAUDE',
+                        {'group1': {'DIRS': ['/srv/one']}}, raising=False)
+    pairs = group_dirs()
+    assert group_for_cwd('/srv/one/x', pairs) == 'group1'
+    assert group_for_cwd(os.path.realpath('path3'), pairs) == 'group2'
+    # DIRS replaces group1's REPOS rather than adding to them.
+    assert group_for_cwd(os.path.realpath('path1'), pairs) is None
+
+
 def test_group_dirs_fall_back_to_git_repos():
     pairs = group_dirs()
     assert group_for_cwd(os.path.realpath('path3'), pairs) == 'group2'

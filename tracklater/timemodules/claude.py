@@ -57,22 +57,19 @@ def _real(path: str) -> str:
 def group_dirs() -> List[Tuple[str, str]]:
     """(directory, group) pairs, longest directory first so the closest wins.
 
-    CLAUDE.<group>.DIRS when any group sets it, else GIT.<group>.REPOS, so a
-    setup that already maps repositories needs no new settings."""
-    pairs: List[Tuple[str, str]] = []
+    Each group uses its CLAUDE.<group>.DIRS when set, else its GIT.<group>.REPOS,
+    so a setup that already maps repositories needs no new settings and setting
+    DIRS for one group leaves the others' repositories in place."""
     claude = getattr(settings, 'CLAUDE', {}) or {}
-    for group, data in claude.items():
+    git = getattr(settings, 'GIT', {}) or {}
+    pairs: List[Tuple[str, str]] = []
+    for group in dict.fromkeys(list(claude) + list(git)):
         if group == 'global':
             continue
-        for path in (data or {}).get('DIRS', []):
-            pairs.append((_real(path), group))
-    if not pairs:
-        git = getattr(settings, 'GIT', {}) or {}
-        for group, data in git.items():
-            if group == 'global':
-                continue
-            for path in (data or {}).get('REPOS', []):
-                pairs.append((_real(path), group))
+        paths = (claude.get(group) or {}).get('DIRS')
+        if paths is None:
+            paths = (git.get(group) or {}).get('REPOS', [])
+        pairs.extend((_real(path), group) for path in paths)
     return sorted(pairs, key=lambda pair: len(pair[0]), reverse=True)
 
 
