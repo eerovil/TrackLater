@@ -34,8 +34,14 @@ DEFAULTS = {
 }
 PROMPT_CHARS = 120
 MESSAGE_TYPES = ('user', 'assistant')
-# Prompts that say nothing about the work, so never make the chat's hint.
-NO_HINT_PREFIXES = ('Continue the work from this AgentDeck chat',)
+# Messages AgentDeck sends a chat on its own (briefs, wake-ons, review events,
+# job results): never listed as typed prompts. Only a brief can be the hint.
+DECK_PREFIXES = (
+    'Context:', 'AgentDeck', 'Continue the work from this AgentDeck chat',
+    'Your queued job', 'You are AgentDeck',
+)
+# AgentDeck's wrapper around an answer the person typed; the answer is kept.
+ANSWER_PREFIX = 'The person answered from the question box:'
 
 
 def get_setting(key, default=None, group='global') -> Any:
@@ -100,6 +106,15 @@ def prompt_text(message: dict) -> Optional[str]:
     return text or None
 
 
+def listed_prompt(prompt: Optional[str]) -> Optional[str]:
+    """A prompt as listed in an entry, or None for AgentDeck's own messages."""
+    if not prompt or prompt.startswith(DECK_PREFIXES):
+        return None
+    if prompt.startswith(ANSWER_PREFIX):
+        prompt = prompt[len(ANSWER_PREFIX):].lstrip(' -«').rstrip(' »')
+    return _short(prompt) if prompt else None
+
+
 def chat_hint(first_prompt: Optional[str]) -> str:
     """What the chat is about, from its first prompt. An AgentDeck brief opens
     "Context: Work for owner/repo#1. This chat is ..."; keep its first sentence."""
@@ -138,8 +153,9 @@ def read_chat(path: str) -> Optional[dict]:
                     continue
                 cwd = cwd or data.get('cwd')
                 prompt = prompt_text(data) if data['type'] == 'user' else None
-                if (prompt and first_prompt is None
-                        and not prompt.startswith(NO_HINT_PREFIXES)):
+                if (prompt and first_prompt is None and (
+                        prompt.startswith('Context:')
+                        or not prompt.startswith(DECK_PREFIXES))):
                     first_prompt = prompt
                 try:
                     messages.append((parse_time(timestamp), prompt))
@@ -196,7 +212,10 @@ class Parser(EntryMixin, AbstractParser):
             for span in split_spans(messages, idle):
                 start = span[0][0]
                 end = max(span[-1][0], start + timedelta(seconds=min_duration))
-                prompts = [_short(prompt) for _time, prompt in span if prompt]
+                prompts = [
+                    listed for listed in (listed_prompt(prompt) for _time, prompt in span)
+                    if listed
+                ]
                 lines = ['{}: {}'.format(folder, hint)]
                 lines.extend('> ' + prompt for prompt in prompts[:max_prompts])
                 if len(prompts) > max_prompts:

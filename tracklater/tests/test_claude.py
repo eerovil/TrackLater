@@ -8,6 +8,7 @@ from tracklater.timemodules.claude import (
     Parser,
     Provider,
     chat_hint,
+    listed_prompt,
     group_dirs,
     group_for_cwd,
     prompt_text,
@@ -124,3 +125,26 @@ def test_chat_hint_shortens_agentdeck_brief():
         'Work for owner/repo#7'
     assert chat_hint(None) == '(no prompt)'
     assert chat_hint('x' * 200).endswith('…')
+
+
+def test_deck_messages_are_not_listed_as_prompts(monkeypatch):
+    t = datetime(1970, 1, 15, 9)
+    chat = {
+        'session_id': 'x', 'cwd': 'path1',
+        'first_prompt': 'Context: Work for o/r#1. This chat is the Work.',
+        'messages': [
+            (t, 'Context: Work for o/r#1. This chat is the Work.'),
+            (t + timedelta(minutes=1), 'AgentDeck wake-on: commit status finished'),
+            (t + timedelta(minutes=2), 'Make the button blue'),
+        ],
+    }
+    monkeypatch.setattr(Provider, 'test_get_chats', lambda self, s, e: [chat])
+    entries = Parser(datetime(1970, 1, 10), datetime(1970, 1, 20)).get_entries()
+    assert entries[0].text == 'path1: Work for o/r#1\n> Make the button blue'
+
+
+def test_listed_prompt_unwraps_question_box_answers():
+    assert listed_prompt('The person answered from the question box: - «Yes, ship it»') == \
+        'Yes, ship it'
+    assert listed_prompt('AgentDeck event: review passed') is None
+    assert listed_prompt(None) is None
