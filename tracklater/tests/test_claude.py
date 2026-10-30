@@ -148,3 +148,57 @@ def test_listed_prompt_unwraps_question_box_answers():
         'Yes, ship it'
     assert listed_prompt('AgentDeck event: review passed') is None
     assert listed_prompt(None) is None
+
+
+def _chat(session_id, cwd, times):
+    return {'session_id': session_id, 'cwd': cwd, 'first_prompt': 'p',
+            'messages': [(t, 'p') for t in times]}
+
+
+def test_two_chats_at_once_and_range_cut(monkeypatch):
+    t = datetime(1970, 1, 15, 9)
+    chats = [
+        _chat('a', 'path1', [t, t + timedelta(minutes=5)]),
+        _chat('b', 'path3', [t + timedelta(minutes=1), t + timedelta(minutes=3)]),
+        # Only the part inside the range is kept.
+        _chat('c', 'path1', [datetime(1970, 1, 9, 23, 59), datetime(1970, 1, 10, 0, 5)]),
+    ]
+    monkeypatch.setattr(Provider, 'test_get_chats', lambda self, s, e: chats)
+    entries = Parser(datetime(1970, 1, 10), datetime(1970, 1, 20)).get_entries()
+    by_chat = {e.extra_data['session_id']: e for e in entries}
+    assert len(entries) == 3
+    assert (by_chat['a'].group, by_chat['b'].group) == ('group1', 'group2')
+    assert by_chat['c'].start_time == datetime(1970, 1, 10, 0, 5)
+
+
+def test_refetch_gives_same_ids():
+    def ids():
+        return sorted(e.id for e in Parser(
+            datetime(1970, 1, 10), datetime(1970, 1, 20)).get_entries())
+    assert ids() == ids()
+
+
+def test_read_chat_sorts_lines_written_out_of_order(tmp_path):
+    lines = [
+        {'type': 'assistant', 'timestamp': '2026-01-01T09:05:00Z'},
+        {'type': 'user', 'timestamp': '2026-01-01T09:00:00Z', 'message': {'content': 'a'}},
+    ]
+    path = tmp_path / 's.jsonl'
+    path.write_text('\n'.join(json.dumps(line, separators=(',', ':')) for line in lines))
+    times = [time for time, _prompt in read_chat(str(path))['messages']]
+    assert times == sorted(times)
+
+
+def test_provider_skips_files_not_written_in_range(tmp_path, monkeypatch):
+    monkeypatch.setattr('tracklater.settings.TESTING', False)
+    monkeypatch.setattr('tracklater.settings.CLAUDE',
+                        {'global': {'DIR': str(tmp_path)}}, raising=False)
+    line = json.dumps({'type': 'user', 'timestamp': '2026-01-01T09:00:00Z', 'cwd': '/x',
+                       'message': {'content': 'hi'}}, separators=(',', ':'))
+    for name, mtime in (('old', 1_000_000), ('new', 2_000_000_000)):
+        (tmp_path / 'proj').mkdir(exist_ok=True)
+        path = tmp_path / 'proj' / '{}.jsonl'.format(name)
+        path.write_text(line)
+        os.utime(path, (mtime, mtime))
+    chats = Provider().get_chats(datetime(2020, 1, 1), datetime(2030, 1, 1))
+    assert [chat['session_id'] for chat in chats] == ['new']
