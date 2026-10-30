@@ -300,7 +300,7 @@ class Parser(EntryMixin, AbstractParser):
             if sorted_groups:
                 session.group = sorted_groups[0][0]
                 session.text = session.group + "\n" + session.text
-            if session.end_time.date() != session.start_time.date():
+            if end.date() != start.date():
                 session.end_time = session.start_time + timedelta(hours=1)
             return session
 

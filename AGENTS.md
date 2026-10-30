@@ -11,10 +11,8 @@ Python 3.12 with uv, from the repository root:
 
 Prove a pull request's head with that command as an `agentdeck job --verification`.
 
-As of the activitywatch merge (f9df2d6) the suite is not green: 6 tests fail and 6 error
-(`test_app.py` registers SQLAlchemy twice, the Kimai provider has no `_test_fixtures`, some
-populate tests call ActivityWatch on 127.0.0.1:5600). Do not call those failures yours; fixing
-them is its own Work.
+The suite is green, and so is `mypy tracklater`. The `Python application` GitHub workflow runs
+flake8, mypy and pytest on Python 3.12 on every push; keep all three passing.
 
 ## The running copy
 

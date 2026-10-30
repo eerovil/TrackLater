@@ -19,7 +19,7 @@ import subprocess
 import tempfile
 from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 try:
     from zoneinfo import ZoneInfo
@@ -560,7 +560,7 @@ def populate_local_entries_ai(
 # --------------------------------------------------------------------------- #
 # Feature 2: streaming week-fill (per-day, cancellable, keeps finished days)
 # --------------------------------------------------------------------------- #
-def _local_day_utc_bounds(day: str) -> (datetime, datetime):
+def _local_day_utc_bounds(day: str) -> Tuple[datetime, datetime]:
     """UTC [start, end) covering one LOCAL calendar day, for scoping the
     per-day draft-delete in persist_local_entries to just that day."""
     local_start = datetime.strptime(day, '%Y-%m-%d')

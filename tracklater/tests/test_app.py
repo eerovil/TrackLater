@@ -1,5 +1,4 @@
 import pytest
-import os
 
 from typing import Any
 from datetime import datetime, timedelta
@@ -7,21 +6,18 @@ from datetime import datetime, timedelta
 from tracklater import create_app
 from tracklater.models import Entry, Issue, Project
 
-DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
 app = create_app()
 
 
 @pytest.fixture
 def client(db):
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}/database_testing.db'.format(DIRECTORY)
-    client = app.test_client()
-    db.init_app(app)
+    # create_app() already registered db on this app, bound to the throwaway
+    # database conftest.py chose; start each test from empty tables.
     with app.app_context():
+        db.drop_all()
         db.create_all()
-
-    yield client
-    os.remove("{}/database_testing.db".format(DIRECTORY))
+    yield app.test_client()
 
 
 def test_app_root(client):
@@ -45,8 +41,8 @@ def test_database_entries(client, db: Any):
     start_date = datetime.utcnow() - timedelta(days=7)
     end_date = datetime.utcnow()
     parser = Parser(start_date, end_date)
-    parser.entries = parser.get_entries()
     with app.app_context():
+        parser.entries = parser.get_entries()
         store_parser_to_database(parser, 'toggl', start_date, end_date)
 
         db_entries = Entry.query.all()
@@ -59,8 +55,8 @@ def test_database_projects(client, db: Any):
     start_date = datetime.utcnow() - timedelta(days=7)
     end_date = datetime.utcnow()
     parser = Parser(start_date, end_date)
-    parser.projects = parser.get_projects()
     with app.app_context():
+        parser.projects = parser.get_projects()
         store_parser_to_database(parser, 'toggl', start_date, end_date)
 
         db_projects = Project.query.all()
@@ -73,8 +69,8 @@ def test_database_issues(client, db: Any):
     start_date = datetime.utcnow() - timedelta(days=7)
     end_date = datetime.utcnow()
     parser = Parser(start_date, end_date)
-    parser.issues = parser.get_issues()
     with app.app_context():
+        parser.issues = parser.get_issues()
         store_parser_to_database(parser, 'jira', start_date, end_date)
 
         db_issues = Issue.query.all()

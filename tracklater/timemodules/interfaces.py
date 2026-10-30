@@ -38,6 +38,10 @@ class ProviderMetaclass(type):
     def __new__(cls, name, bases, local):
         for attr in local:
             value = local[attr]
+            # Static and class methods became callable in Python 3.10; wrapping
+            # them would drop the descriptor and pass the first argument as self.
+            if isinstance(value, (staticmethod, classmethod)):
+                continue
             if callable(value):
                 local[attr] = testing_decorator(value)
         return type.__new__(cls, name, bases, local)
@@ -111,8 +115,8 @@ class AbstractParser(metaclass=ABCMeta):
     def capabilities(self) -> List[str]:
         return []
 
-    @abstractmethod
     def parse(self) -> None:
+        # End of the mixins' super().parse() chain.
         pass
 
 

@@ -1765,10 +1765,9 @@ def build_entries_from_commits(
     ).all()
 
     if commit_anchors:
-        entries = _build_commit_session_entries(
+        return _build_commit_session_entries(
             commit_anchors, presence, aw_rows, allowed_projects,
         )
-        return entries
 
     entries: List[Dict[str, Any]] = []
     for aw in aw_anchors:
