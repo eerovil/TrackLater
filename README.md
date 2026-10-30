@@ -231,7 +231,8 @@ Time tracking (for billing) is done through Toggl. Also, both groups happen to h
 
     "CLAUDE": {
         # Claude Code chats as hints, one entry per burst of messages.
-        # Transcripts are read from DIR (default ~/.claude/projects) and never sent anywhere.
+        # Transcripts are read from DIR (a folder or list, globs allowed; default
+        # ~/.claude*/projects, so every Claude account on the host) and never sent anywhere.
         "global": {
             "IDLE": 900,  # a gap this long (seconds) starts a new entry
             "INCLUDE_UNGROUPED": false  # true also shows chats outside every group's DIRS

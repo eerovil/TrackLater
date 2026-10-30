@@ -23,7 +23,9 @@ logger = logging.getLogger(__name__)
 
 
 DEFAULTS = {
-    'DIR': '~/.claude/projects',
+    # One folder or a list; each may be a glob. AgentDeck runs a second Claude
+    # account from ~/.claude2, so the default reads every ~/.claude*/projects.
+    'DIR': '~/.claude*/projects',
     'IDLE': 900,
     # A lone message still gets a visible block on the timeline.
     'MIN_DURATION': 60,
@@ -231,11 +233,20 @@ class Parser(EntryMixin, AbstractParser):
 
 class Provider(AbstractProvider):
     def get_chats(self, start_date, end_date) -> List[dict]:
-        root = os.path.expanduser(get_setting('DIR', DEFAULTS['DIR']))
+        setting = get_setting('DIR', DEFAULTS['DIR'])
+        patterns = [setting] if isinstance(setting, str) else list(setting)
+        roots = sorted({
+            root for pattern in patterns
+            for root in glob.glob(os.path.expanduser(pattern))
+        })
         # A transcript last written before the range holds nothing in it.
         since = calendar.timegm(start_date.timetuple()) if start_date else 0
         chats = []
-        for path in glob.glob(os.path.join(root, '*', '*.jsonl')):
+        paths = [
+            path for root in roots
+            for path in glob.glob(os.path.join(root, '*', '*.jsonl'))
+        ]
+        for path in paths:
             try:
                 if os.path.getmtime(path) < since:
                     continue

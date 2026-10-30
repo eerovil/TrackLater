@@ -213,3 +213,23 @@ def test_provider_skips_files_not_written_in_range(tmp_path, monkeypatch):
         os.utime(path, (mtime, mtime))
     chats = Provider().get_chats(datetime(2020, 1, 1), datetime(2030, 1, 1))
     assert [chat['session_id'] for chat in chats] == ['new']
+
+
+def test_provider_reads_every_account_folder(tmp_path, monkeypatch):
+    monkeypatch.setattr('tracklater.settings.TESTING', False)
+    monkeypatch.setattr('tracklater.settings.CLAUDE',
+                        {'global': {'DIR': str(tmp_path / '.claude*' / 'projects')}},
+                        raising=False)
+    line = json.dumps({'type': 'user', 'timestamp': '2026-01-01T09:00:00Z', 'cwd': '/x',
+                       'message': {'content': 'hi'}}, separators=(',', ':'))
+    for account, session in (('.claude', 'main'), ('.claude2', 'alt')):
+        folder = tmp_path / account / 'projects' / 'proj'
+        folder.mkdir(parents=True)
+        (folder / '{}.jsonl'.format(session)).write_text(line)
+    chats = Provider().get_chats(datetime(2020, 1, 1), datetime(2030, 1, 1))
+    assert sorted(chat['session_id'] for chat in chats) == ['alt', 'main']
+    monkeypatch.setattr('tracklater.settings.CLAUDE',
+                        {'global': {'DIR': [str(tmp_path / '.claude2' / 'projects')]}},
+                        raising=False)
+    chats = Provider().get_chats(datetime(2020, 1, 1), datetime(2030, 1, 1))
+    assert [chat['session_id'] for chat in chats] == ['alt']
