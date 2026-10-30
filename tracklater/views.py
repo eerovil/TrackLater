@@ -146,9 +146,10 @@ def updateentry() -> Any:
         if project in ("null", "0", "", None):
             project = None
         project_to_group = {project.pid: project.group for project in Project.query.all()}
+        # Entries are naive UTC; the frontend sends epoch ms.
         new_entry = Entry(
-            start_time=parseTimestamp(data['start_time']),
-            end_time=parseTimestamp(data.get('end_time', None)),
+            start_time=parseUtcTimestamp(data['start_time']),
+            end_time=parseUtcTimestamp(data.get('end_time', None)),
             id=entry_id,
             issue=data.get('issue_id', None),
             project=project,
@@ -163,21 +164,25 @@ def updateentry() -> Any:
 
         parser = Parser(None, None)
 
-        if not entry_id:
-            # Check that create is allowed
-            assert isinstance(parser.modules[module], AddEntryMixin)
-            new_entry = parser.modules[module].create_entry(  # type: ignore
-                new_entry=new_entry,
-                issue=issue
-            )
-        else:
-            # Check that update is allowed
-            assert isinstance(parser.modules[module], UpdateEntryMixin)
-            new_entry = parser.modules[module].update_entry(  # type: ignore
-                entry_id=new_entry.id,
-                new_entry=new_entry,
-                issue=issue
-            )
+        try:
+            if not entry_id:
+                # Check that create is allowed
+                assert isinstance(parser.modules[module], AddEntryMixin)
+                new_entry = parser.modules[module].create_entry(  # type: ignore
+                    new_entry=new_entry,
+                    issue=issue
+                )
+            else:
+                # Check that update is allowed
+                assert isinstance(parser.modules[module], UpdateEntryMixin)
+                new_entry = parser.modules[module].update_entry(  # type: ignore
+                    entry_id=new_entry.id,
+                    new_entry=new_entry,
+                    issue=issue
+                )
+        except ValueError as e:
+            # e.g. Kimai refuses an entry with no project: say so instead of a 500.
+            return json.dumps({"error": str(e)}), 400
         data = "error"
 
         while True:
@@ -308,11 +313,11 @@ def populateentry() -> Any:
     """Create a single local entry grown from a double-click at `click` (ms),
     bounded by the neighbouring entries `prev_end`/`next_start` (ms, optional)."""
     data = request.get_json() or {}
-    click = parseTimestamp(data.get('click'))
+    click = parseUtcTimestamp(data.get('click'))
     if not click:
         return json.dumps({"error": "click timestamp (ms) is required"}), 400
-    prev_end = parseTimestamp(data.get('prev_end')) if data.get('prev_end') else None
-    next_start = parseTimestamp(data.get('next_start')) if data.get('next_start') else None
+    prev_end = parseUtcTimestamp(data.get('prev_end')) if data.get('prev_end') else None
+    next_start = parseUtcTimestamp(data.get('next_start')) if data.get('next_start') else None
     try:
         from tracklater.ai_local_codex import populate_entry_at
         created = populate_entry_at(click, prev_end=prev_end, next_start=next_start)
