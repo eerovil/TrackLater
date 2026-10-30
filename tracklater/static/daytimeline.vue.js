@@ -68,7 +68,9 @@ var daytimeline = Vue.component("daytimeline", {
         const oldStart = new Date(entry.start_time).getTime();
         const oldEnd = new Date(entry.end_time).getTime();
         const movedStart = item.start.getTime() !== oldStart;
-        const movedEnd = item.end.getTime() !== oldEnd;
+        // Compare against the bar as drawn (kimai bars end 1s late), or an
+        // untouched end reads as moved and a left-edge resize becomes a move.
+        const movedEnd = item.end.getTime() !== this.timelineEndForEntry(entry).getTime();
         let s = snap(item.start);
         let e = snap(item.end);
         if (movedStart && movedEnd) {
@@ -82,11 +84,11 @@ var daytimeline = Vue.component("daytimeline", {
             if (callback) callback(null);
             return;
         }
-        item.start = new Date(s);
-        item.end = new Date(e);
+        entry.start_time = new Date(s);
+        entry.end_time = new Date(e);
+        item.start = entry.start_time;
+        item.end = this.timelineEndForEntry(entry);
         if (callback) callback(item); // reflect the snapped position immediately
-        entry.start_time = item.start;
-        entry.end_time = item.end;
         this.$emit('updateEntry', entry);
         this.$store.commit('setSelectedEntry', entry);
       },
