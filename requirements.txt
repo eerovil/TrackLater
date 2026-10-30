@@ -1,11 +1,10 @@
 Flask
-GitPython==2.1.11
-gitdb2==3.0.1
-python-dateutil==2.8.0
+GitPython>=3.1
+python-dateutil>=2.8
 slack_sdk
-pytz==2019.1
+pytz
 flask-sqlalchemy
-requests==2.22.0
-appdirs==1.4.3
+requests>=2.31
+appdirs>=1.4.3
 multidict
 aiohttp

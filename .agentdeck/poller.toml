@@ -1,0 +1,58 @@
+# TrackLater — AgentDeck project file (eerovil/eeron-omat-taskit#151).
+#
+# Read by `agentdeck-project join eerovil/TrackLater`. Portable: no secrets, no machine paths.
+# A Flask app with a pytest suite, one repo, one operator. Nothing deploys on merge: the copy
+# that runs on bazzite (~/.local/share/tracklater) is updated by hand.
+
+contract = 1
+
+# Boardless: a Work's status is one `status:*` label on the issue.
+org = "eerovil"
+ownership_label = "claude"
+spec_only_label = "spec-only"
+paused_label = "paused"
+
+[decks]
+main = "eerovil"
+
+[policy]
+merge_method = "merge"
+worker_cap = 3
+terminal_recheck_s = 900
+graphql_reserve = 200
+core_reserve = 500
+
+[[repos]]
+id = "TrackLater"
+holds_issues = true
+holds_code = true
+# The worker proves each head with an `agentdeck job` running the suite (see AGENTS.md).
+verification = "agentdeck_job"
+
+# Screenshot evidence goes to the shared private evidence repository, under TrackLater/issue-<n>/.
+[[repos]]
+id = "agent-artifacts"
+holds_artifacts = true
+
+[authorization.work]
+role = "triage"
+
+[authorization.release]
+role = "maintain"
+allow = ["chatgpt-git-mcp-eerovil[bot]"]
+
+[capabilities]
+work_control = true
+guarded_release = true
+merge_review = true
+deployment_observation = false
+artifacts = false
+# Eero chose on eeron-omat-taskit#151: the deck merges once review passed and tests are green.
+auto_release = true
+
+[comments.guide]
+heading = "🤖 **Steer this card with a new comment**"
+work = "**Reply, continue, or ask for changes:** `/claude <what you want>`"
+stop = "**Stop the work:** `/claude stop`"
+merge = "**Approve and release finished work:** `/merge` *(only from In review)*"
+merge_review = "**Review before releasing:** `/merge review`"
