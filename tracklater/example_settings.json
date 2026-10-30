@@ -27,6 +27,9 @@
         "gitmodule": {
             "global": "#F44D27"
         },
+        "claude": {
+            "global": "#D97757"
+        },
         "slack": {
             "global": "#4A154B"
         }
@@ -118,6 +121,15 @@
         },
         "group2": {
             "REPOS": ["/full/path/to/group2/repo"]
+        }
+    },
+
+    "CLAUDE": {
+        "global": {
+            "IDLE": 900
+        },
+        "group1": {
+            "DIRS": ["/full/path/to/group1/repo"]
         }
     },
 
