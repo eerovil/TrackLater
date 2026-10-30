@@ -217,9 +217,9 @@ def test_provider_skips_files_not_written_in_range(tmp_path, monkeypatch):
 
 def test_provider_reads_every_account_folder(tmp_path, monkeypatch):
     monkeypatch.setattr('tracklater.settings.TESTING', False)
-    monkeypatch.setattr('tracklater.settings.CLAUDE',
-                        {'global': {'DIR': str(tmp_path / '.claude*' / 'projects')}},
-                        raising=False)
+    # No DIR setting at all: the default must find both accounts under $HOME.
+    monkeypatch.setattr('tracklater.settings.CLAUDE', {}, raising=False)
+    monkeypatch.setenv('HOME', str(tmp_path))
     line = json.dumps({'type': 'user', 'timestamp': '2026-01-01T09:00:00Z', 'cwd': '/x',
                        'message': {'content': 'hi'}}, separators=(',', ':'))
     for account, session in (('.claude', 'main'), ('.claude2', 'alt')):
