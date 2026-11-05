@@ -1,7 +1,8 @@
 # Agent guide — TrackLater
 
 A Flask app that shows a day's clues (ActivityWatch, git, Kimai, …) on a timeline and bills time
-from them. Settings live in `~/.config/tracklater.json`, never in the repo; never commit API keys.
+from them. Settings live in `~/.config/tracklater.json`, never in the repo; never commit API keys,
+and redact every credential in logs and output, whatever its setting is called (`CREDENTIALS` too).
 
 ## Running the tests
 
@@ -19,3 +20,6 @@ flake8, mypy and pytest on Python 3.12 on every push; keep all three passing.
 bazzite runs TrackLater as the user service `tracklater.service` from
 `~/.local/share/tracklater/src` (https://bazzite.taile8d16e.ts.net:5012). A merge does not update
 it; pull that checkout and `systemctl --user restart tracklater` when asked.
+
+Deleting an entry removes it from its service (Kimai: `DELETE timesheets/<id>`). Confirm each
+inferred entry with the owner before deleting it.
