@@ -165,7 +165,14 @@ var home = Vue.component("home", {
                 this.$store.commit('setEntries', {module_name: entry.module, entries: updated_entries});
                 this.$store.commit('setLoading', {module_name: 'updateentry', loading: false});
                 this.$store.commit('setSelectedEntry', updated_entries.find((_entry) => _entry.title === response.data.title && _entry.start_time === response.data.start_time && _entry.end_time === response.data.end_time));
-            }).catch(_handleFailure)
+            }).catch(err => {
+                const d = err.response && err.response.data;
+                if (!(d && d.error)) return _handleFailure(err);
+                // A refused save: drop the optimistic bar and say why.
+                this.$store.commit('setLoading', {module_name: 'updateentry', loading: false});
+                this.fetchModule(entry.module, 0);
+                alert("Saving the entry failed: " + d.error);
+            })
         },
         deleteEntry(entry) {
             this.$store.commit('setLoading', {module_name: 'deleteentry', loading: true});
@@ -287,6 +294,18 @@ var home = Vue.component("home", {
                 skip_filled_days: !singleDay,
             };
         },
+        fallbackProject(group, beforeMs) {
+            // Project of the latest entry starting before beforeMs, else of any entry.
+            const entries = (this.$store.state.modules[group].entries || [])
+                .filter((e) => e.project && !String(e.id).startsWith("codex-pending-"));
+            let best = null;
+            entries.forEach((e) => {
+                const s = new Date(e.start_time).getTime();
+                if (s <= beforeMs && (!best || s > new Date(best.start_time).getTime())) best = e;
+            });
+            best = best || entries[0];
+            return best ? best.project : '';
+        },
         codexEntry(req) {
             // req: {click(ms), prev_end(ms|null), next_start(ms|null), group}
             const group = req.group;
@@ -329,13 +348,14 @@ var home = Vue.component("home", {
                     this.fetchSuggestions();
                 } else {
                     // No signal near the click → blank manual entry to fill by hand.
+                    // Kimai needs a project, so borrow the nearest earlier entry's.
                     removePlaceholder();
                     this.updateEntry({
                         module: group,
                         start_time: start,
                         end_time: end,
                         title: "Unnamed Entry",
-                        project: '',
+                        project: this.fallbackProject(group, startMs),
                     });
                 }
             }).catch(err => {
