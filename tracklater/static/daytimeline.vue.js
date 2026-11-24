@@ -208,8 +208,8 @@ var daytimeline = Vue.component("daytimeline", {
             row.editable = false
             row.selectable = false;
           }
-          if (entry.module === 'claude' && claudeInOneLane) {
-            row.subgroup = 'claude';  // one lane, see groups()
+          if (entry.module === 'claude') {
+            row.subgroup = claudeInOneLane ? 'lane' : 'stacked';  // see groups()
           }
           if (entry.is_draft) {
             row.className += ' draft';
@@ -282,11 +282,10 @@ var daytimeline = Vue.component("daytimeline", {
               id: module_name,
               content: module_name,
             };
-            if (module_name === 'claude' && this.claudeInOneLane(this.entries)) {
-              // The blocks do not overlap, but vis draws the shortest ones wider
-              // than they are and would stack them. Naming some other subgroup here
-              // keeps the row's own subgroup in one lane.
-              group.subgroupStack = {none: true};
+            if (module_name === 'claude') {
+              // vis draws the shortest blocks wider than they are and would stack
+              // them. Only the subgroup named here stacks; 'lane' stays in one lane.
+              group.subgroupStack = {stacked: true};
             }
             ret.push(group)
           }

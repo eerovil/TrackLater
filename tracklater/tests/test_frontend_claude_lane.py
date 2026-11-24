@@ -35,7 +35,6 @@ const claude = (start, end) => ({
   end_time: `2026-11-12T${end}`,
 });
 
-ctx.entries = [claude('09:02:00', '09:04:00'), claude('09:00:00', '09:02:00')];
 const groups = computed.groups.call(ctx);
 assert.strictEqual(groups.map((g) => g.id).join(), 'claude,kimai');
 const items = methods.entriesToItems.call(ctx, ['claude', 'kimai'].map((name) => ({
@@ -43,7 +42,7 @@ const items = methods.entriesToItems.call(ctx, ['claude', 'kimai'].map((name) =>
   start_time: '2026-11-12T09:00:00',
   end_time: '2026-11-12T09:02:00',
 })));
-assert.strictEqual(items[0].subgroup, 'claude');
+assert.strictEqual(items[0].subgroup, 'lane');
 // vis stacks a subgroup only when subgroupStack names it, and reads
 // subgroupStack only when something in it is true.
 assert.ok(Object.values(groups[0].subgroupStack).includes(true));
@@ -51,10 +50,17 @@ assert.ok(!groups[0].subgroupStack[items[0].subgroup]);
 assert.strictEqual(items[1].subgroup, undefined);
 assert.strictEqual(groups[1].subgroupStack, undefined);
 
+// Blocks that only touch are one lane, in any order.
+const touching = [claude('09:02:00', '09:04:00'), claude('09:00:00', '09:02:00')];
+for (const item of methods.entriesToItems.call(ctx, touching)) {
+  assert.strictEqual(item.subgroup, 'lane');
+}
+
 // Rows that overlap in time keep stacking, so none of them is hidden.
-ctx.entries = [claude('09:00:00', '11:00:00'), claude('10:00:00', '10:30:00')];
-assert.strictEqual(computed.groups.call(ctx)[0].subgroupStack, undefined);
-assert.strictEqual(methods.entriesToItems.call(ctx, ctx.entries)[0].subgroup, undefined);
+const overlapping = [claude('09:00:00', '11:00:00'), claude('10:00:00', '10:30:00')];
+for (const item of methods.entriesToItems.call(ctx, overlapping)) {
+  assert.ok(groups[0].subgroupStack[item.subgroup]);
+}
 '''
     result = subprocess.run(
         ['node', '-e', script, day_path], capture_output=True, text=True)
