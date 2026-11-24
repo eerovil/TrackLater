@@ -9,7 +9,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__
 
 
 @pytest.mark.skipif(shutil.which('node') is None, reason='node is not installed')
-def test_only_the_claude_row_is_kept_in_one_lane():
+def test_only_a_claude_row_without_overlaps_is_set_to_one_lane():
     day_path = os.path.join(ROOT, 'tracklater', 'static', 'daytimeline.vue.js')
     script = r'''
 const fs = require('fs');
@@ -26,9 +26,16 @@ const module = {capabilities: ['entries'], color: {}};
 const ctx = {
   modules: {claude: module, kimai: module},
   timelineEndForEntry: methods.timelineEndForEntry,
+  claudeInOneLane: methods.claudeInOneLane,
   logCommitsOutsideLocalEntries() {},
 };
+const claude = (start, end) => ({
+  module: 'claude',
+  start_time: `2026-11-12T${start}`,
+  end_time: `2026-11-12T${end}`,
+});
 
+ctx.entries = [claude('09:02:00', '09:04:00'), claude('09:00:00', '09:02:00')];
 const groups = computed.groups.call(ctx);
 assert.strictEqual(groups.map((g) => g.id).join(), 'claude,kimai');
 const items = methods.entriesToItems.call(ctx, ['claude', 'kimai'].map((name) => ({
@@ -43,6 +50,11 @@ assert.ok(Object.values(groups[0].subgroupStack).includes(true));
 assert.ok(!groups[0].subgroupStack[items[0].subgroup]);
 assert.strictEqual(items[1].subgroup, undefined);
 assert.strictEqual(groups[1].subgroupStack, undefined);
+
+// Rows that overlap in time keep stacking, so none of them is hidden.
+ctx.entries = [claude('09:00:00', '11:00:00'), claude('10:00:00', '10:30:00')];
+assert.strictEqual(computed.groups.call(ctx)[0].subgroupStack, undefined);
+assert.strictEqual(methods.entriesToItems.call(ctx, ctx.entries)[0].subgroup, undefined);
 '''
     result = subprocess.run(
         ['node', '-e', script, day_path], capture_output=True, text=True)

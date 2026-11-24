@@ -177,10 +177,20 @@ var daytimeline = Vue.component("daytimeline", {
           );
         }
       },
+      claudeInOneLane(entries) {
+        // Rows stored before the claude module made blocks can overlap in time;
+        // one lane would hide some of them.
+        const spans = (entries || [])
+          .filter((e) => e.module === 'claude' && e.end_time)
+          .map((e) => [new Date(e.start_time).getTime(), new Date(e.end_time).getTime()])
+          .sort((a, b) => a[0] - b[0]);
+        return spans.every((span, i) => i === 0 || spans[i - 1][1] <= span[0]);
+      },
       entriesToItems(entries) {
         if (!entries.length) {
           return [];
         }
+        const claudeInOneLane = this.claudeInOneLane(entries);
         const items = entries.map((entry, i) => {
           let row = {
             id: i,
@@ -198,7 +208,7 @@ var daytimeline = Vue.component("daytimeline", {
             row.editable = false
             row.selectable = false;
           }
-          if (entry.module === 'claude') {
+          if (entry.module === 'claude' && claudeInOneLane) {
             row.subgroup = 'claude';  // one lane, see groups()
           }
           if (entry.is_draft) {
@@ -272,8 +282,8 @@ var daytimeline = Vue.component("daytimeline", {
               id: module_name,
               content: module_name,
             };
-            if (module_name === 'claude') {
-              // claude blocks never overlap, but vis draws the shortest ones wider
+            if (module_name === 'claude' && this.claudeInOneLane(this.entries)) {
+              // The blocks do not overlap, but vis draws the shortest ones wider
               // than they are and would stack them. Naming some other subgroup here
               // keeps the row's own subgroup in one lane.
               group.subgroupStack = {none: true};
