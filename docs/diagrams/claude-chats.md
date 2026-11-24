@@ -1,47 +1,47 @@
 # Claude chats on the timeline
 
-How the `claude` module turns Claude Code chat transcripts into hint entries on
-their own timeline row. It reads only local files, picks a client from the chat's
-folder, and splits each chat into blocks where messages are close together.
+How the `claude` module turns Claude Code chat transcripts into hint entries
+on their own timeline row. It shows the moments the person wrote a message, not
+how long the agents worked, as one line of short blocks that never overlap.
 Nothing is billed and no transcript text leaves the machine.
 
 ```mermaid
 flowchart TD
-    A[Fetch claude row for a date range] --> B[List transcripts in ~/.claude*/projects]
-    B --> C{Written to since the range start?}
-    C -- No --> X[Skip file]
-    C -- Yes --> D[Read user and Claude messages with times]
-    D --> E[Pick hint: first real prompt]
-    E --> F{Chat folder inside a client folder?}
-    F -- Yes --> G[Group = that client]
+    A[Fetch claude row for a date range] --> B[Read transcripts, one day wider on both sides]
+    B --> F{Chat folder inside a client folder?}
     F -- No --> H{INCLUDE_UNGROUPED on?}
     H -- No --> X2[Skip chat]
-    H -- Yes --> I[No group]
-    G --> J[Split messages where the gap is IDLE or more]
-    I --> J
-    J --> K[One entry per block: hint plus prompts typed in it]
-    K --> L[Stored as claude entries, shown on the claude row]
+    H -- Yes --> P
+    F -- Yes --> P{Did the person write this message?}
+    P -- No --> X3[Skip message]
+    P -- Yes --> M[Put messages of all chats in one time order]
+    M --> S{Same client, under IDLE since last, block under MAX_DURATION?}
+    S -- Yes --> J[Join to the block]
+    S -- No --> N[Start a new block]
+    J --> E[Block ends TAIL after its last message, or where the next block starts]
+    N --> E
+    E --> R{Block starts inside the asked range?}
+    R -- No --> X4[Leave out]
+    R -- Yes --> L[Shown on the claude row]
 
-    class A,B,D,E teal
-    class C,F,H amber
-    class G,I,J,K blue
+    class A,B teal
+    class F,H,P,S,R amber
+    class M,J,N,E blue
     class L green
-    class X,X2 rose
+    class X2,X3,X4 rose
 ```
 
 ## Colours
 - **teal**: reading the transcripts
 - **amber**: a choice the module makes
-- **blue**: building the entries
+- **blue**: building the blocks
 - **green**: what the timeline shows
 - **rose**: left out
 
 ## Boxes
-- **List transcripts in ~/.claude*/projects**: `Provider.get_chats` in `tracklater/timemodules/claude.py`; the folders come from `CLAUDE.global.DIR` (a folder or list, globs allowed); the default `~/.claude*/projects` also reads the second account AgentDeck runs from `~/.claude2`.
-- **Written to since the range start?**: a file last changed before the range can hold nothing in it, so it is not opened.
-- **Read user and Claude messages with times**: `read_chat`; skips bookkeeping lines and subagent (sidechain) messages.
-- **Pick hint: first real prompt**: `chat_hint`; an AgentDeck brief shortens to "Work for owner/repo#n", and other messages AgentDeck sends by itself (wake-ons, review events) are passed over.
-- **Chat folder inside a client folder?**: `group_for_cwd` and `group_dirs`; each group's folders come from its `CLAUDE.<group>.DIRS`, or its `GIT.<group>.REPOS` when that group sets no DIRS. The closest folder wins.
-- **INCLUDE_UNGROUPED on?**: off by default, so tooling and side-project chats stay off the row.
-- **Split messages where the gap is IDLE or more**: `split_spans`; `CLAUDE.global.IDLE`, default 900 seconds.
-- **One entry per block: hint plus prompts typed in it**: `Parser.get_entries`; AgentDeck's own messages are not listed; a lone message lasts `MIN_DURATION` (60 s), and at most `MAX_PROMPTS` (5) prompts are listed.
+- **Read transcripts, one day wider on both sides**: so a block has the same start however the range is cut, and a refetch cannot leave an overlapping copy. Folders come from `CLAUDE.global.DIR`, default `~/.claude*/projects`.
+- **Chat folder inside a client folder?**: `group_for_cwd` and `group_dirs` in `tracklater/timemodules/claude.py`; unchanged.
+- **INCLUDE_UNGROUPED on?**: off by default, as today.
+- **Did the person write this message?**: typed messages, messages sent while the agent worked, and question box answers count. Messages AgentDeck sends by itself, tool results, summaries and subagent lines do not. Words AgentDeck wraps in a note of its own are unwrapped (`unwrap`).
+- **Same client, under IDLE since last, block under MAX_DURATION?**: `IDLE` 300 seconds, `MAX_DURATION` 1800 seconds.
+- **Block ends TAIL after its last message, or where the next block starts**: `TAIL` 120 seconds; also never past `MAX_DURATION`.

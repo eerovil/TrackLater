@@ -230,11 +230,13 @@ Time tracking (for billing) is done through Toggl. Also, both groups happen to h
     },
 
     "CLAUDE": {
-        # Claude Code chats as hints, one entry per burst of messages.
+        # The messages you wrote to Claude Code as hints: short blocks that never overlap.
         # Transcripts are read from DIR (a folder or list, globs allowed; default
         # ~/.claude*/projects, so every Claude account on the host) and never sent anywhere.
         "global": {
-            "IDLE": 900,  # a gap this long (seconds) starts a new entry
+            "IDLE": 300,  # a gap this long (seconds) between messages starts a new block
+            "TAIL": 120,  # a block lasts this long after its last message
+            "MAX_DURATION": 1800,  # the longest a block can be
             "INCLUDE_UNGROUPED": false  # true also shows chats outside every group's DIRS
         },
         # A chat run in (or under) one of these folders belongs to the group.

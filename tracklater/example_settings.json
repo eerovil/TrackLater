@@ -126,7 +126,7 @@
 
     "CLAUDE": {
         "global": {
-            "IDLE": 900
+            "IDLE": 300
         },
         "group1": {
             "DIRS": ["/full/path/to/group1/repo"]

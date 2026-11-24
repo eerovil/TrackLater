@@ -1,17 +1,19 @@
 """Claude Code chats as timeline hints.
 
 Reads the JSONL transcripts Claude Code writes under ~/.claude/projects and
-turns each chat's activity into entries on a `claude` row: messages closer than
-IDLE seconds form one entry. The chat's working directory picks the group, the
-same way GIT.<group>.REPOS does. Hints only: nothing here bills, and transcript
+turns the messages the person wrote, all chats in one time order, into short
+blocks on a `claude` row that never overlap; how long an agent worked does not
+matter. The chat's working directory picks the group, the same way
+GIT.<group>.REPOS does. Hints only: nothing here bills, and transcript
 text never leaves this machine (it is only stored in the local database).
 """
 import calendar
 import glob
 import json
 import os
+import re
 from datetime import datetime, timedelta
-from typing import Any, List, Optional, Tuple
+from typing import Any, Dict, List, NamedTuple, Optional, Set, Tuple
 
 from tracklater import settings
 from tracklater.utils import parse_time
@@ -26,21 +28,38 @@ DEFAULTS = {
     # One folder or a list; each may be a glob. AgentDeck runs a second Claude
     # account from ~/.claude2, so the default reads every ~/.claude*/projects.
     'DIR': '~/.claude*/projects',
-    'IDLE': 900,
-    # A lone message still gets a visible block on the timeline.
-    'MIN_DURATION': 60,
+    # A gap this long (seconds) between messages starts a new block.
+    'IDLE': 300,
+    # A block lasts this long after its last message, so a lone one is visible.
+    'TAIL': 120,
+    'MAX_DURATION': 1800,
     'MAX_PROMPTS': 5,
     # Chats outside every mapped directory (tooling, side projects) are noise
     # for billing; set True to show them ungrouped.
     'INCLUDE_UNGROUPED': False,
 }
 PROMPT_CHARS = 120
-MESSAGE_TYPES = ('user', 'assistant')
-# Messages AgentDeck sends a chat on its own (briefs, wake-ons, review events,
-# job results): never listed as typed prompts. Only a brief can be the hint.
+# Blocks are built from messages this much outside the asked range too, so a
+# block starts at the same time however the range is cut.
+MARGIN = timedelta(days=1)
+# Messages AgentDeck (or Claude Code) puts in a chat on its own (briefs, wake-ons,
+# review events, job results): never the person's. Only a brief can be the hint.
 DECK_PREFIXES = (
-    'Context:', 'AgentDeck', 'Continue the work from this AgentDeck chat',
-    'Your queued job', 'You are AgentDeck',
+    'Context:', 'AgentDeck',
+    'Your queued job', 'You are AgentDeck', 'Routine notice:',
+    'This session is being continued', 'Your Mac command', 'I approve the spec',
+    'The previous account', 'Your previous turn failed',
+    'The AgentDeck runtime',
+    'You are a side chat', '[Request interrupted',
+    'Continue the work from', 'Write a concise self-contained handoff', 'The boss ',
+    'Without calling any tool', 'Base directory for this skill',
+)
+# AgentDeck's wrappers around the person's own words (group 1), which are kept.
+WRAPPERS = (
+    re.compile(r'Deck notes that came .*--- The message itself follows\. ---\s*(.*)'),
+    re.compile(r'\(From the deck: .*?`\.\)\s*(.*)'),
+    re.compile(r'Start new work from here: .*?The work, in my words: (.*?)'
+               r'(?: - Write the issue from this .*)?$'),
 )
 # AgentDeck's wrapper around an answer the person typed; the answer is kept.
 ANSWER_PREFIX = 'The person answered from the question box:'
@@ -88,7 +107,7 @@ def group_for_cwd(cwd: Optional[str], pairs: List[Tuple[str, str]]) -> Optional[
 def prompt_text(message: dict) -> Optional[str]:
     """The typed text of a user message, or None for tool results and
     injected context (system reminders, slash-command output)."""
-    if message.get('isMeta'):
+    if message.get('isMeta') or message.get('isCompactSummary'):
         return None
     content = (message.get('message') or {}).get('content')
     if isinstance(content, str):
@@ -102,11 +121,43 @@ def prompt_text(message: dict) -> Optional[str]:
         return None
     parts = [part.strip() for part in parts if part and not part.lstrip().startswith('<')]
     text = ' '.join(' '.join(parts).split())
+    if not text and isinstance(content, list) and any(
+            isinstance(block, dict) and block.get('type') == 'image' for block in content):
+        return '(image)'
     return text or None
+
+
+def line_prompt(data: dict) -> Optional[str]:
+    """The prompt in one transcript line: a user message, or a message sent
+    while Claude was working, which is stored as a queued_command attachment."""
+    if data.get('isSidechain'):
+        return None
+    if data.get('type') == 'user':
+        return prompt_text(data)
+    attachment = data.get('attachment')
+    if (data.get('type') == 'attachment' and isinstance(attachment, dict)
+            and attachment.get('type') == 'queued_command'
+            and attachment.get('commandMode') == 'prompt'):
+        return prompt_text({
+            'isMeta': data.get('isMeta') or attachment.get('isMeta'),
+            'message': {'content': attachment.get('prompt')},
+        })
+    return None
+
+
+def unwrap(prompt: str) -> str:
+    for pattern in WRAPPERS:
+        match = pattern.match(prompt)
+        if match:
+            prompt = match.group(1)
+    return prompt
 
 
 def listed_prompt(prompt: Optional[str]) -> Optional[str]:
     """A prompt as listed in an entry, or None for AgentDeck's own messages."""
+    if not prompt:
+        return None
+    prompt = unwrap(prompt)
     if not prompt or prompt.startswith(DECK_PREFIXES):
         return None
     if prompt.startswith(ANSWER_PREFIX):
@@ -130,32 +181,34 @@ def _short(text: str, limit: int = PROMPT_CHARS) -> str:
 
 def read_chat(path: str) -> Optional[dict]:
     """One transcript as {session_id, cwd, first_prompt, messages}, where
-    messages is a time-sorted list of (time, prompt or None)."""
+    messages is a time-sorted list of (time, prompt)."""
     session_id = os.path.splitext(os.path.basename(path))[0]
     cwd = None
     first_prompt = None
-    messages: List[Tuple[datetime, Optional[str]]] = []
+    messages: List[Tuple[datetime, str]] = []
     try:
         with open(path, 'r', encoding='utf-8', errors='replace') as f:
             for line in f:
                 # Most lines are API bookkeeping; skip them before parsing.
-                if '"type":"user"' not in line and '"type":"assistant"' not in line:
+                if '"type":"user"' not in line and '"queued_command"' not in line:
                     continue
                 try:
                     data = json.loads(line)
                 except ValueError:
                     continue
-                if data.get('type') not in MESSAGE_TYPES or data.get('isSidechain'):
+                if not isinstance(data, dict):
                     continue
+                if not data.get('isSidechain'):
+                    cwd = cwd or data.get('cwd')
+                prompt = line_prompt(data)
                 timestamp = data.get('timestamp')
-                if not timestamp:
+                if not prompt or not timestamp:
                     continue
-                cwd = cwd or data.get('cwd')
-                prompt = prompt_text(data) if data['type'] == 'user' else None
-                if (prompt and first_prompt is None and (
-                        prompt.startswith('Context:')
-                        or not prompt.startswith(DECK_PREFIXES))):
-                    first_prompt = prompt
+                words = unwrap(prompt)
+                if (words and first_prompt is None and (
+                        words.startswith('Context:')
+                        or not words.startswith(DECK_PREFIXES))):
+                    first_prompt = words
                 try:
                     messages.append((parse_time(timestamp), prompt))
                 except Exception:
@@ -174,61 +227,115 @@ def read_chat(path: str) -> Optional[dict]:
     }
 
 
-def split_spans(
-    messages: List[Tuple[datetime, Optional[str]]], idle: float,
-) -> List[List[Tuple[datetime, Optional[str]]]]:
-    spans: List[List[Tuple[datetime, Optional[str]]]] = []
-    for item in messages:
-        if spans and (item[0] - spans[-1][-1][0]).total_seconds() < idle:
-            spans[-1].append(item)
-        else:
-            spans.append([item])
-    return spans
+class Message(NamedTuple):
+    time: datetime
+    group: Optional[str]
+    session_id: str
+    label: str  # "folder: what the chat is about"
+    prompt: str
 
 
-def _entry_id(session_id: str, start: datetime) -> str:
-    return '{}-{}'.format(session_id[:36], calendar.timegm(start.timetuple()))
+class Block(NamedTuple):
+    start: datetime
+    end: datetime
+    group: Optional[str]
+    messages: List[Message]
+
+
+def build_blocks(
+    messages: List[Message], idle: float, tail: float, max_duration: float,
+) -> List[Block]:
+    """Blocks of messages, in time order and never overlapping."""
+    limit = timedelta(seconds=max_duration)
+    runs: List[List[Message]] = []
+    for message in sorted(messages, key=lambda m: (m.time, m.session_id)):
+        if runs:
+            first, last = runs[-1][0], runs[-1][-1]
+            # Two blocks in one second would leave the first one empty.
+            same_second = message.time.replace(microsecond=0) == first.time.replace(microsecond=0)
+            if same_second or (
+                    message.group == first.group
+                    and message.time - last.time < timedelta(seconds=idle)
+                    and message.time - first.time < limit):
+                runs[-1].append(message)
+                continue
+        runs.append([message])
+    blocks = []
+    for index, run in enumerate(runs):
+        start = run[0].time
+        end = min(run[-1].time + timedelta(seconds=tail), start + limit)
+        if index + 1 < len(runs):
+            end = min(end, runs[index + 1][0].time)
+        blocks.append(Block(start, end, run[0].group, run))
+    return blocks
+
+
+def block_text(block: Block, max_prompts: int) -> str:
+    """Each chat in the block, followed by what was written in it."""
+    chats: Dict[str, List[Message]] = {}
+    for message in block.messages:
+        chats.setdefault(message.session_id, []).append(message)
+    lines = []
+    left = max_prompts
+    for messages in chats.values():
+        lines.append(messages[0].label)
+        lines.extend('> ' + message.prompt for message in messages[:left])
+        left -= min(left, len(messages))
+    hidden = len(block.messages) - max_prompts
+    if hidden > 0:
+        lines.append('... and {} more prompts'.format(hidden))
+    return '\n'.join(lines)
+
+
+def _entry_id(block: Block) -> str:
+    return 'claude-{}-{}'.format(block.group, calendar.timegm(block.start.timetuple()))
 
 
 class Parser(EntryMixin, AbstractParser):
-    def get_entries(self) -> List[Entry]:
-        idle = get_setting('IDLE', DEFAULTS['IDLE'])
-        min_duration = get_setting('MIN_DURATION', DEFAULTS['MIN_DURATION'])
-        max_prompts = get_setting('MAX_PROMPTS', DEFAULTS['MAX_PROMPTS'])
+    def get_messages(self) -> List[Message]:
         include_ungrouped = get_setting('INCLUDE_UNGROUPED', DEFAULTS['INCLUDE_UNGROUPED'])
         pairs = group_dirs()
-        entries: List[Entry] = []
-        for chat in Provider().get_chats(self.start_date, self.end_date):
-            messages = [
-                item for item in chat['messages']
-                if self.start_date <= item[0] <= self.end_date
-            ]
+        since, until = self.start_date - MARGIN, self.end_date + MARGIN
+        messages: List[Message] = []
+        # A branched or resumed chat copies the earlier lines into a new file.
+        seen: Set[Tuple[datetime, str]] = set()
+        chats = Provider().get_chats(since, until)
+        for chat in sorted(chats, key=lambda chat: chat['session_id']):
             group = group_for_cwd(chat['cwd'], pairs)
             if group is None and not include_ungrouped:
                 continue
             folder = os.path.basename((chat['cwd'] or '').rstrip('/')) or 'claude'
-            hint = chat_hint(chat['first_prompt'])
-            for span in split_spans(messages, idle):
-                start = span[0][0]
-                end = max(span[-1][0], start + timedelta(seconds=min_duration))
-                prompts = [
-                    listed for listed in (listed_prompt(prompt) for _time, prompt in span)
-                    if listed
-                ]
-                lines = ['{}: {}'.format(folder, hint)]
-                lines.extend('> ' + prompt for prompt in prompts[:max_prompts])
-                if len(prompts) > max_prompts:
-                    lines.append('... and {} more prompts'.format(len(prompts) - max_prompts))
-                entries.append(Entry(
-                    id=_entry_id(chat['session_id'], start),
-                    start_time=start,
-                    end_time=end,
-                    group=group,
-                    title='',
-                    text='\n'.join(lines),
-                    extra_data={'session_id': chat['session_id'], 'cwd': chat['cwd']},
-                ))
-        return entries
+            label = '{}: {}'.format(folder, chat_hint(chat['first_prompt']))
+            for time, prompt in chat['messages']:
+                listed = listed_prompt(prompt)
+                if not listed or not since <= time <= until or (time, prompt) in seen:
+                    continue
+                seen.add((time, prompt))
+                messages.append(Message(time, group, chat['session_id'], label, listed))
+        return messages
+
+    def get_entries(self) -> List[Entry]:
+        max_prompts = get_setting('MAX_PROMPTS', DEFAULTS['MAX_PROMPTS'])
+        blocks = build_blocks(
+            self.get_messages(),
+            idle=get_setting('IDLE', DEFAULTS['IDLE']),
+            tail=get_setting('TAIL', DEFAULTS['TAIL']),
+            max_duration=get_setting('MAX_DURATION', DEFAULTS['MAX_DURATION']),
+        )
+        return [
+            Entry(
+                id=_entry_id(block),
+                start_time=block.start,
+                end_time=block.end,
+                group=block.group,
+                title='',
+                text=block_text(block, max_prompts),
+                extra_data={
+                    'session_ids': sorted({m.session_id for m in block.messages}),
+                },
+            )
+            for block in blocks if self.start_date <= block.start <= self.end_date
+        ]
 
 
 class Provider(AbstractProvider):
@@ -265,8 +372,6 @@ class Provider(AbstractProvider):
             'first_prompt': 'Fix the order list',
             'messages': [
                 (base, 'Fix the order list'),
-                (base + timedelta(minutes=2), None),
                 (base + timedelta(minutes=40), 'Now add a test'),
-                (base + timedelta(minutes=41), None),
             ],
         }]
