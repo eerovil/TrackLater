@@ -30,7 +30,7 @@ const ctx = {
 };
 
 const groups = computed.groups.call(ctx);
-assert.deepStrictEqual(groups.map((g) => g.id), ['claude', 'kimai']);
+assert.strictEqual(groups.map((g) => g.id).join(), 'claude,kimai');
 const items = methods.entriesToItems.call(ctx, ['claude', 'kimai'].map((name) => ({
   module: name,
   start_time: '2026-11-12T09:00:00',
