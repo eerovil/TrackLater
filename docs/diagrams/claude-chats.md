@@ -8,7 +8,10 @@ Nothing is billed and no transcript text leaves the machine.
 ```mermaid
 flowchart TD
     A[Fetch claude row for a date range] --> B[Read transcripts, one day wider on both sides]
-    B --> F{Chat folder inside a client folder?}
+    B --> W{Written to since the range start?}
+    W -- No --> X1[Skip file]
+    W -- Yes --> HI[Pick hint: first real prompt]
+    HI --> F{Chat folder inside a client folder?}
     F -- No --> H{INCLUDE_UNGROUPED on?}
     H -- No --> X2[Skip chat]
     H -- Yes --> P
@@ -24,11 +27,11 @@ flowchart TD
     R -- No --> X4[Leave out]
     R -- Yes --> L[Shown on the claude row]
 
-    class A,B teal
-    class F,H,P,S,R amber
+    class A,B,HI teal
+    class W,F,H,P,S,R amber
     class M,J,N,E blue
     class L green
-    class X2,X3,X4 rose
+    class X1,X2,X3,X4 rose
 ```
 
 ## Colours
@@ -39,9 +42,11 @@ flowchart TD
 - **rose**: left out
 
 ## Boxes
-- **Read transcripts, one day wider on both sides**: so a block has the same start however the range is cut, and a refetch cannot leave an overlapping copy. Folders come from `CLAUDE.global.DIR`, default `~/.claude*/projects`.
-- **Chat folder inside a client folder?**: `group_for_cwd` and `group_dirs` in `tracklater/timemodules/claude.py`; unchanged.
-- **INCLUDE_UNGROUPED on?**: off by default, as today.
+- **Read transcripts, one day wider on both sides**: so a block has the same start however the range is cut. A refetch replaces stored blocks that start inside its range. Folders come from `CLAUDE.global.DIR`, default `~/.claude*/projects`.
+- **Written to since the range start?**: a file last changed before the (widened) range holds nothing in it.
+- **Pick hint: first real prompt**: `chat_hint`; an AgentDeck brief shortens to "Work for owner/repo#n".
+- **Chat folder inside a client folder?**: `group_for_cwd` and `group_dirs` in `tracklater/timemodules/claude.py`; a group's folders are its `CLAUDE.<group>.DIRS`, or its `GIT.<group>.REPOS`. The closest folder wins.
+- **INCLUDE_UNGROUPED on?**: off by default, so side-project chats stay off the row.
 - **Did the person write this message?**: typed messages, messages sent while the agent worked, and question box answers count. Messages AgentDeck sends by itself, tool results, summaries and subagent lines do not. Words AgentDeck wraps in a note of its own are unwrapped (`unwrap`).
-- **Same client, under IDLE since last, block under MAX_DURATION?**: `IDLE` 300 seconds, `MAX_DURATION` 1800 seconds.
+- **Same client, under IDLE since last, block under MAX_DURATION?**: `IDLE` 300 seconds, `MAX_DURATION` 1800 seconds. A message in the same second as the block start joins it whatever the client, so no block is empty.
 - **Block ends TAIL after its last message, or where the next block starts**: `TAIL` 120 seconds; also never past `MAX_DURATION`.

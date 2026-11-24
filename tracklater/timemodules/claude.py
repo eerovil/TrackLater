@@ -47,11 +47,16 @@ MARGIN = timedelta(days=1)
 DECK_PREFIXES = (
     'Context:', 'AgentDeck',
     'Your queued job', 'You are AgentDeck', 'Routine notice:',
-    'This session is being continued', 'Your Mac command', 'I approve the spec',
+    'This session is being continued', 'Your Mac command', 'I approve the spec. Remove possible',
     'The previous account', 'Your previous turn failed',
     'The AgentDeck runtime',
     'You are a side chat', '[Request interrupted',
-    'Continue the work from', 'Write a concise self-contained handoff', 'The boss ',
+    'Continue the work from this AgentDeck chat',
+    'Continue the work from the earlier part of this AgentDeck chat',
+    'Write a concise self-contained handoff', 'The boss lifted the pause',
+    'The boss tapped Run it now',
+    # Wrapped messages with none of the person's words in them (see WRAPPERS).
+    'Deck notes that came while', '(From the deck:', 'Start new work from here: file it',
     'Without calling any tool', 'Base directory for this skill',
 )
 # AgentDeck's wrappers around the person's own words (group 1), which are kept.

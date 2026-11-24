@@ -208,6 +208,23 @@ def test_listed_prompt_keeps_the_persons_words_inside_deck_wrappers():
                          '- Write the issue from this conversation.') == 'kieli'
 
 
+@pytest.mark.parametrize('prompt', [
+    'Deck notes that came while you were not woken: 1. AgentDeck: merged.',
+    '(From the deck: 2 new messages.)',
+    'Start new work from here: file it.',
+])
+def test_wrapper_without_the_persons_words_is_skipped(prompt):
+    assert listed_prompt(prompt) is None
+
+
+@pytest.mark.parametrize('prompt', [
+    'The boss wants a report', 'Continue the work from the old branch',
+    'I approve the spec but change the colour',
+])
+def test_own_words_that_look_like_a_deck_message_are_kept(prompt):
+    assert listed_prompt(prompt) == prompt
+
+
 def _chat(session_id, cwd, times):
     return {'session_id': session_id, 'cwd': cwd, 'first_prompt': 'p',
             'messages': [(t, 'p') for t in times]}
