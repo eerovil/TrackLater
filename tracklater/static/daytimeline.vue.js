@@ -177,10 +177,20 @@ var daytimeline = Vue.component("daytimeline", {
           );
         }
       },
+      claudeInOneLane(entries) {
+        // Rows stored before the claude module made blocks can overlap in time;
+        // one lane would hide some of them.
+        const spans = (entries || [])
+          .filter((e) => e.module === 'claude' && e.end_time)
+          .map((e) => [new Date(e.start_time).getTime(), new Date(e.end_time).getTime()])
+          .sort((a, b) => a[0] - b[0]);
+        return spans.every((span, i) => i === 0 || spans[i - 1][1] <= span[0]);
+      },
       entriesToItems(entries) {
         if (!entries.length) {
           return [];
         }
+        const claudeInOneLane = this.claudeInOneLane(entries);
         const items = entries.map((entry, i) => {
           let row = {
             id: i,
@@ -197,6 +207,9 @@ var daytimeline = Vue.component("daytimeline", {
           if (entry.id && entry.id.startsWith("placeholderid")) {
             row.editable = false
             row.selectable = false;
+          }
+          if (entry.module === 'claude') {
+            row.subgroup = claudeInOneLane ? 'lane' : 'stacked';  // see groups()
           }
           if (entry.is_draft) {
             row.className += ' draft';
@@ -265,10 +278,16 @@ var daytimeline = Vue.component("daytimeline", {
         ret = []
         for (let module_name in this.modules) {
           if (this.modules[module_name].capabilities.includes('entries')){
-            ret.push({
+            const group = {
               id: module_name,
               content: module_name,
-            })
+            };
+            if (module_name === 'claude') {
+              // vis draws the shortest blocks wider than they are and would stack
+              // them. Only the subgroup named here stacks; 'lane' stays in one lane.
+              group.subgroupStack = {stacked: true};
+            }
+            ret.push(group)
           }
         }
         return ret
