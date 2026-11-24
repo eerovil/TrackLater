@@ -66,7 +66,8 @@ for (const name of ['claude', 'kimai']) {
   // Overlapping ones stack, so none of them is hidden.
   const overlapping = [span(name, '09:00:00', '11:00:00'), span(name, '10:00:00', '10:30:00')];
   assert.ok(draw(overlapping).every(stacks), name);
-  // So does one still running, which has no end.
+  // One still running has no end: it stacks only with what is after its start.
+  assert.ok(draw(touching.concat([span(name, '10:30:00')])).every((item) => !stacks(item)), name);
   assert.ok(draw(touching.concat([span(name, '09:10:00')])).every(stacks), name);
 }
 // One row's overlap does not stack another, and other rows stack as before.
@@ -75,30 +76,6 @@ const mixed = draw([
   span('kimai', '09:00:00', '10:00:00'), span('activitywatch', '09:00:00', '10:00:00'),
 ]);
 assert.deepStrictEqual(mixed.map(stacks), [true, true, false, true]);
-""")
-
-
-@needs_node
-def test_moving_a_kimai_entry_onto_another_restacks_the_row():
-    run(r"""
-function move(start, end, entries) {
-  let redrawn = null;
-  const day = Object.assign({}, ctx, {
-    entries,
-    modules: {kimai: {capabilities: ['entries', 'updateentry'], color: {}}},
-    $emit() {}, $store: {commit() {}}, $nextTick(f) { f(); },
-  });
-  Object.defineProperty(day, 'items', {set(items) { redrawn = items; }});
-  methods.onMove.call(day, {
-    id: 0, group: 'kimai', start: new Date(at(start)), end: new Date(at(end)),
-  }, () => {});
-  return redrawn && Array.from(redrawn).map(stacks);
-}
-const pair = () => [span('kimai', '09:00:00', '10:00:00'), span('kimai', '12:00:00', '13:00:00')];
-assert.deepStrictEqual(move('12:00:00', '13:00:01', pair()), [true, true]);
-assert.strictEqual(move('10:00:00', '11:00:01', pair()), null);
-const onTop = [span('kimai', '12:00:00', '13:00:00'), span('kimai', '12:00:00', '13:00:00')];
-assert.deepStrictEqual(move('09:00:00', '10:00:01', onTop), [false, false]);
 """)
 
 
@@ -126,8 +103,9 @@ assert.strictEqual(
 assert.strictEqual(bars[3].title, '1 commit<br />09:20 ');
 assert.ok(bars[0].style.includes('blue') && bars[1].style.includes('gray'));
 assert.ok(bars.every((bar) => !stacks(bar) && bar.editable.updateTime === false));
-// Clicking a bar picks one of its commits.
+// Clicking a bar picks its first commit.
 assert.strictEqual(entries[bars[1].id].text, 'other');
+assert.strictEqual(entries[bars[0].id].text, 'a <b> & c');
 assert.strictEqual(new Set(draw(entries).map((i) => i.id)).size, 5);
 
 const many = draw(Array.from({length: 40}, (_, i) =>

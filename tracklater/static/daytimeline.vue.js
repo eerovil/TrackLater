@@ -1,4 +1,5 @@
-// Rows drawn on a single line while nothing in them overlaps in time.
+// Rows kept on a single line: claude and kimai while nothing in them overlaps in
+// time, gitmodule always, as its bars are built side by side.
 const ONE_LANE_MODULES = ['claude', 'gitmodule', 'kimai'];
 const COMMIT_SLOT_MS = 10 * 60 * 1000;
 const MAX_HOVER_COMMITS = 15;
@@ -89,18 +90,11 @@ var daytimeline = Vue.component("daytimeline", {
             if (callback) callback(null);
             return;
         }
-        const wasOneLane = this.inOneLane(item.group, this.entries);
         entry.start_time = new Date(s);
         entry.end_time = new Date(e);
         item.start = entry.start_time;
         item.end = this.timelineEndForEntry(entry);
         if (callback) callback(item); // reflect the snapped position immediately
-        if (this.inOneLane(item.group, this.entries) !== wasOneLane) {
-          // The entry was moved onto or off another one: stack or unstack the row.
-          this.$nextTick(() => {
-            this.items = this.entriesToItems(this.entries);
-          });
-        }
         this.$emit('updateEntry', entry);
         this.$store.commit('setSelectedEntry', entry);
       },
@@ -195,11 +189,12 @@ var daytimeline = Vue.component("daytimeline", {
       inOneLane(module, entries) {
         // One lane would hide entries that overlap, so those stack.
         const rows = entries.filter((e) => e.module === module && !this.isCommit(e));
-        if (rows.some((e) => e.end_time == undefined)) {
-          return false;
-        }
         const spans = rows
-          .map((e) => [new Date(e.start_time).getTime(), new Date(e.end_time).getTime()])
+          .map((e) => [
+            new Date(e.start_time).getTime(),
+            // A running entry has no end yet.
+            e.end_time == undefined ? Infinity : new Date(e.end_time).getTime(),
+          ])
           .sort((a, b) => a[0] - b[0]);
         return spans.every((span, i) => i === 0 || spans[i - 1][1] <= span[0]);
       },
@@ -228,9 +223,9 @@ var daytimeline = Vue.component("daytimeline", {
         slots.forEach((clients, slot) => {
           const width = COMMIT_SLOT_MS / clients.size;
           [...clients.keys()].sort().forEach((client, position) => {
-            const indexes = clients.get(client);
-            const commits = indexes.map((i) => entries[i])
-              .sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+            const indexes = clients.get(client).sort(
+              (a, b) => new Date(entries[a].start_time) - new Date(entries[b].start_time));
+            const commits = indexes.map((i) => entries[i]);
             const lines = commits.slice(0, MAX_HOVER_COMMITS).map((commit) => {
               const time = new Date(commit.start_time);
               const clock = [time.getHours(), time.getMinutes()]

@@ -33,8 +33,6 @@ function drag(newStart, newEnd) {
     entries: [entry],
     modules: {kimai: {capabilities: ['updateentry']}},
     timelineEndForEntry: methods.timelineEndForEntry,
-    inOneLane: methods.inOneLane,
-    isCommit: methods.isCommit,
     $emit() {},
     $store: {commit() {}},
   };
