@@ -1,3 +1,9 @@
+// Rows kept on a single line: claude and kimai while nothing in them overlaps in
+// time, gitmodule always, as its bars are built side by side.
+const ONE_LANE_MODULES = ['claude', 'gitmodule', 'kimai'];
+const COMMIT_SLOT_MS = 10 * 60 * 1000;
+const MAX_HOVER_COMMITS = 15;
+
 var daytimeline = Vue.component("daytimeline", {
     template: `
     <div>
@@ -177,21 +183,90 @@ var daytimeline = Vue.component("daytimeline", {
           );
         }
       },
-      claudeInOneLane(entries) {
-        // Rows stored before the claude module made blocks can overlap in time;
-        // one lane would hide some of them.
-        const spans = (entries || [])
-          .filter((e) => e.module === 'claude' && e.end_time)
-          .map((e) => [new Date(e.start_time).getTime(), new Date(e.end_time).getTime()])
+      isCommit(entry) {
+        return entry.module === 'gitmodule' && entry.end_time == undefined;
+      },
+      inOneLane(module, entries) {
+        // One lane would hide entries that overlap, so those stack.
+        const rows = entries.filter((e) => e.module === module && !this.isCommit(e));
+        const spans = rows
+          .map((e) => [
+            new Date(e.start_time).getTime(),
+            // A running entry has no end yet.
+            e.end_time == undefined ? Infinity : new Date(e.end_time).getTime(),
+          ])
           .sort((a, b) => a[0] - b[0]);
         return spans.every((span, i) => i === 0 || spans[i - 1][1] <= span[0]);
+      },
+      commitItems(entries) {
+        // A bar for each client in each ten minutes, which its clients share.
+        const slots = new Map();
+        entries.forEach((entry, i) => {
+          if (!this.isCommit(entry)) {
+            return;
+          }
+          const slot = Math.floor(new Date(entry.start_time).getTime() / COMMIT_SLOT_MS);
+          if (!slots.has(slot)) {
+            slots.set(slot, new Map());
+          }
+          const clients = slots.get(slot);
+          const client = entry.group || '';
+          if (!clients.has(client)) {
+            clients.set(client, []);
+          }
+          clients.get(client).push(i);
+        });
+        const escape = (text) => text
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const colors = (this.modules.gitmodule || {}).color || {};
+        const items = [];
+        slots.forEach((clients, slot) => {
+          const width = COMMIT_SLOT_MS / clients.size;
+          [...clients.keys()].sort().forEach((client, position) => {
+            const indexes = clients.get(client).sort(
+              (a, b) => new Date(entries[a].start_time) - new Date(entries[b].start_time));
+            const commits = indexes.map((i) => entries[i]);
+            const lines = commits.slice(0, MAX_HOVER_COMMITS).map((commit) => {
+              const time = new Date(commit.start_time);
+              const clock = [time.getHours(), time.getMinutes()]
+                .map((n) => String(n).padStart(2, '0')).join(':');
+              return `${clock} ${(commit.text || commit.title || '').split(/\r?\n/)[0]}`;
+            });
+            if (commits.length > lines.length) {
+              lines.push(`... and ${commits.length - lines.length} more`);
+            }
+            const count = `${commits.length} commit${commits.length === 1 ? '' : 's'}`;
+            const start = slot * COMMIT_SLOT_MS + position * width;
+            const color = colors[client] || colors.global;
+            items.push({
+              id: indexes[0],
+              group: 'gitmodule',
+              subgroup: 'lane',
+              className: 'gitmodule',
+              start: new Date(start),
+              end: new Date(start + width),
+              content: '',  // a count does not fit; it is in the hover text
+              title: [`${client} ${count}`.trim(), ...lines].map(escape).join('<br />'),
+              style: color ? `background-color: ${color}; border-color: ${color}` : '',
+              editable: {updateTime: false, remove: false},
+            });
+          });
+        });
+        return items;
       },
       entriesToItems(entries) {
         if (!entries.length) {
           return [];
         }
-        const claudeInOneLane = this.claudeInOneLane(entries);
-        const items = entries.map((entry, i) => {
+        const oneLane = {};
+        ONE_LANE_MODULES.forEach((name) => {
+          oneLane[name] = this.inOneLane(name, entries);
+        });
+        const items = this.commitItems(entries);
+        entries.forEach((entry, i) => {
+          if (this.isCommit(entry)) {
+            return;
+          }
           let row = {
             id: i,
             group: entry.module,
@@ -208,8 +283,8 @@ var daytimeline = Vue.component("daytimeline", {
             row.editable = false
             row.selectable = false;
           }
-          if (entry.module === 'claude') {
-            row.subgroup = claudeInOneLane ? 'lane' : 'stacked';  // see groups()
+          if (entry.module in oneLane) {
+            row.subgroup = oneLane[entry.module] ? 'lane' : 'stacked';  // see groups()
           }
           if (entry.is_draft) {
             row.className += ' draft';
@@ -227,7 +302,7 @@ var daytimeline = Vue.component("daytimeline", {
                   row.className += ` point-color-${color}`
               }
           }
-          return row
+          items.push(row);
         });
         this.logCommitsOutsideLocalEntries(entries);
         return items;
@@ -282,9 +357,9 @@ var daytimeline = Vue.component("daytimeline", {
               id: module_name,
               content: module_name,
             };
-            if (module_name === 'claude') {
-              // vis draws the shortest blocks wider than they are and would stack
-              // them. Only the subgroup named here stacks; 'lane' stays in one lane.
+            if (ONE_LANE_MODULES.includes(module_name)) {
+              // vis draws the shortest blocks wider than they are, and kimai bars end
+              // 1s late; it would stack both. Only the subgroup named here stacks; 'lane' stays in one lane.
               group.subgroupStack = {stacked: true};
             }
             ret.push(group)
